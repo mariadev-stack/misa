@@ -12,11 +12,13 @@ type Project = {
 
 const projects: Project[] = [
   { title: "SUNO", year: "2025", tags: ["Product Design"], href: "/works/suno" },
-  { title: "Connect IoT", year: "2023", tags: ["Product Design"] },
-  { title: "Be", year: "2025", tags: ["Product Design"] },
-  { title: "TARQ", year: "2026", tags: ["Website Design"] },
-  { title: "The Somos Hotel", year: "2023", tags: ["Website Design"] },
-  { title: "ONX", year: "2026", tags: ["Website Design"] },
+  { title: "Connect IoT", year: "2024", tags: ["Product Design"], href: "/works/connect-iot" },
+  { title: "Be!", year: "2025", tags: ["Product Design"], href: "/works/be" },
+  { title: "TARQ", year: "2026", tags: ["Website Design"], href: "/works/tarq" },
+  { title: "The Somos Hotel", year: "2023", tags: ["Website Design"], href: "/works/the-somos-hotel" },
+  { title: "ONX", year: "2026", tags: ["Website Design"], href: "/works/onx" },
+  { title: "Hidroituango", year: "2025", tags: ["Website Design"], href: "/works/hidroituango" },
+  { title: "Yachtcat", year: "2026", tags: ["Website Design"], href: "/works/yachtcat" },
 ];
 
 const track = [...projects, ...projects, ...projects];
