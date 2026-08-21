@@ -24,6 +24,9 @@ type ShuffleProps = {
   stagger?: number;
   triggerOnce?: boolean;
   triggerOnHover?: boolean;
+  scroller?: string | Element;
+  /** Replay the shuffle on a timer (ms) after it first plays, to draw the eye back to it periodically. */
+  repeatIntervalMs?: number;
 };
 
 export default function Shuffle({
@@ -39,6 +42,8 @@ export default function Shuffle({
   stagger = 0.03,
   triggerOnce = true,
   triggerOnHover = true,
+  scroller,
+  repeatIntervalMs,
 }: ShuffleProps) {
   const ref = useRef<HTMLElement | null>(null);
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -49,6 +54,7 @@ export default function Shuffle({
   const tlRef = useRef<gsap.core.Timeline | null>(null);
   const playingRef = useRef(false);
   const hoverHandlerRef = useRef<(() => void) | null>(null);
+  const repeatTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     if ("fonts" in document) {
@@ -281,10 +287,26 @@ export default function Shuffle({
         play();
         armHover();
         setReady(true);
+
+        if (repeatIntervalMs) {
+          repeatTimerRef.current = setInterval(() => {
+            if (playingRef.current) return;
+            build();
+            play();
+          }, repeatIntervalMs);
+        }
       };
+
+      // Resolve a string scroller ourselves via a plain document query:
+      // useGSAP's `scope` makes gsap's own string-selector resolution
+      // search only inside `ref` (a leaf node here), so it can never find
+      // an ancestor scroll container passed by id.
+      const resolvedScroller =
+        typeof scroller === "string" ? (document.querySelector(scroller) ?? window) : (scroller ?? window);
 
       const st = ScrollTrigger.create({
         trigger: el,
+        scroller: resolvedScroller,
         start: "top 90%",
         once: triggerOnce,
         onEnter: create,
@@ -295,10 +317,14 @@ export default function Shuffle({
         removeHover();
         teardown();
         setReady(false);
+        if (repeatTimerRef.current) {
+          clearInterval(repeatTimerRef.current);
+          repeatTimerRef.current = null;
+        }
       };
     },
     {
-      dependencies: [text, duration, ease, fontsLoaded, shuffleDirection, shuffleTimes, stagger, triggerOnce, triggerOnHover],
+      dependencies: [text, duration, ease, fontsLoaded, shuffleDirection, shuffleTimes, stagger, triggerOnce, triggerOnHover, scroller, repeatIntervalMs],
       scope: ref as React.RefObject<HTMLElement>,
     }
   );

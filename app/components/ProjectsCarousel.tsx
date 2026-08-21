@@ -1,15 +1,17 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 
 type Project = {
   title: string;
   year: string;
   tags: string[];
+  href?: string;
 };
 
 const projects: Project[] = [
-  { title: "SUNO", year: "2025", tags: ["Product Design"] },
+  { title: "SUNO", year: "2025", tags: ["Product Design"], href: "/works/suno" },
   { title: "Connect IoT", year: "2023", tags: ["Product Design"] },
   { title: "Be", year: "2025", tags: ["Product Design"] },
   { title: "TARQ", year: "2026", tags: ["Website Design"] },
@@ -119,28 +121,46 @@ export default function ProjectsCarousel() {
       ref={trackRef}
       className="ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] flex h-full min-h-0 w-screen shrink snap-x snap-mandatory gap-1 overflow-x-auto overscroll-x-contain scroll-smooth scrollbar-none"
     >
-      {track.map((project, index) => (
-        <article
-          key={index}
-          className="flex h-full w-screen min-h-0 shrink-0 snap-center flex-col items-start gap-2 px-10"
-        >
-          <div className="w-full min-h-0 flex-1 rounded-sm bg-white" />
+      {track.map((project, index) => {
+        const card = (
+          <>
+            <div className="w-full min-h-0 flex-1 rounded-sm bg-white" />
 
-          <div className="flex w-full items-center justify-between">
-            <p className="text-[48px] leading-none whitespace-nowrap">
-              {project.title}
-            </p>
-            <div className="flex w-50.5 flex-col items-end gap-1 text-right text-base">
-              <p className="w-full">{project.year}</p>
-              {project.tags.map((tag) => (
-                <p key={tag} className="w-full">
-                  {tag}
-                </p>
-              ))}
+            <div className="flex w-full items-center justify-between">
+              <p className="text-[48px] leading-none whitespace-nowrap">
+                {project.title}
+              </p>
+              <div className="flex w-50.5 flex-col items-end gap-1 text-right text-base">
+                <p className="w-full">{project.year}</p>
+                {project.tags.map((tag) => (
+                  <p key={tag} className="w-full">
+                    {tag}
+                  </p>
+                ))}
+              </div>
             </div>
-          </div>
-        </article>
-      ))}
+          </>
+        );
+
+        return (
+          <article
+            key={index}
+            className="flex h-full w-screen min-h-0 shrink-0 snap-center flex-col items-start gap-2 px-10"
+          >
+            {project.href ? (
+              <Link
+                href={project.href}
+                aria-label={project.title}
+                className="flex h-full min-h-0 w-full flex-col items-start gap-2"
+              >
+                {card}
+              </Link>
+            ) : (
+              card
+            )}
+          </article>
+        );
+      })}
     </div>
   );
 }
