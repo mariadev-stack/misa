@@ -13,11 +13,11 @@ export default function Home() {
 
       <Navbar variant="home" />
 
-      <main className="relative z-10 mt-10 flex h-full flex-1 flex-col items-end justify-end gap-2 px-10 pb-20.5">
+      <main className="relative z-10 mt-6 flex h-full flex-1 flex-col items-end justify-end gap-2 px-4 pb-6 md:mt-10 md:px-10 md:pb-20.5">
         <a
           href="/works"
           aria-label="See All Works"
-          className="group flex items-center justify-center gap-2.5 text-base"
+          className="group flex items-center justify-center gap-2.5 text-sm md:text-base"
         >
           <HoverLetters text="See All Works" />
           <HoverIcon
@@ -25,6 +25,7 @@ export default function Home() {
             width={24}
             height={24}
             className="-scale-x-100"
+            sizeClassName="size-4 md:size-6"
             delayMs={"See All Works".length * HOVER_STAGGER_MS}
           />
         </a>

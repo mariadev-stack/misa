@@ -109,7 +109,7 @@ export default function ProjectsCarousel() {
       {track.map((project, index) => (
         <article
           key={index}
-          className="flex h-full w-screen min-h-0 shrink-0 snap-center flex-col items-start gap-2 px-10"
+          className="flex h-full w-screen min-h-0 shrink-0 snap-center flex-col items-start gap-2 px-4 md:px-10"
         >
           <Link
             href={project.href}
@@ -119,10 +119,10 @@ export default function ProjectsCarousel() {
             <div className="w-full min-h-0 flex-1 bg-white" />
 
             <div className="flex w-full items-center justify-between">
-              <p className="text-[48px] leading-none whitespace-nowrap">
+              <p className="text-[30px] leading-none whitespace-nowrap md:text-[48px]">
                 {project.title}
               </p>
-              <div className="flex w-50.5 flex-col items-end gap-1 text-right text-base">
+              <div className="flex w-50.5 flex-col items-end text-right text-sm md:text-base">
                 <p className="w-full">{project.year}</p>
                 {project.tags.map((tag) => (
                   <p key={tag} className="w-full">

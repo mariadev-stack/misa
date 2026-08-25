@@ -40,9 +40,9 @@ export default function WorksPage() {
         />
       </div>
 
-      <Navbar variant="home" />
+      <Navbar variant="home" mobileCategories={false} />
 
-      <div className="absolute top-37.5 right-10 z-20 flex items-center gap-1 p-1 text-base">
+      <div className="absolute top-28.5 left-4 z-20 flex items-center gap-1 p-1 text-sm md:top-37.5 md:left-auto md:right-10 md:text-base">
         <button
           type="button"
           onClick={() => setView("grid")}
@@ -63,7 +63,7 @@ export default function WorksPage() {
         </button>
       </div>
 
-      <main className="scrollbar-none relative z-10 mt-10 min-h-0 flex-1 overflow-y-auto px-10 pt-10 pb-32">
+      <main className="scrollbar-none relative z-10 mt-0 min-h-0 flex-1 overflow-y-auto px-4 pt-24 pb-6 md:mt-10 md:px-10 md:pt-16 md:pb-32">
         {view === "list" ? (
           <div
             ref={listRef}
@@ -83,7 +83,7 @@ export default function WorksPage() {
                   }}
                   onMouseEnter={() => handleEnter(index)}
                   aria-label={project.title}
-                  className={`flex items-center justify-between border-b border-white/30 py-4 transition-opacity duration-300 ${
+                  className={`flex items-center justify-between border-b border-white/30 py-4 opacity-100 transition-opacity duration-300 md:${
                     hovered === index ? "opacity-100" : "opacity-50"
                   }`}
                 >
@@ -101,7 +101,7 @@ export default function WorksPage() {
 
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute h-41.75 w-62.5 -translate-y-1/2 transition-[opacity,top] duration-300 ease-out"
+              className="pointer-events-none absolute hidden h-41.75 w-62.5 -translate-y-1/2 transition-[opacity,top] duration-300 ease-out md:block"
               style={{
                 top: thumbTop,
                 left: "53%",
@@ -114,7 +114,7 @@ export default function WorksPage() {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-4 gap-x-6 gap-y-10">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-x-6 md:gap-y-10">
             {projects.map((project, index) => (
               <div
                 key={project.title}
@@ -124,12 +124,12 @@ export default function WorksPage() {
                 <Link
                   href={project.href}
                   aria-label={project.title}
-                  className="group flex h-56.75 flex-col gap-4"
+                  className="group flex flex-col gap-4 md:h-56.75"
                 >
-                  <div className="h-41.75 w-full shrink-0 overflow-hidden transition-[height] duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] group-hover:h-46.75">
+                  <div className="h-30.75 w-full shrink-0 overflow-hidden transition-[height] duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] md:h-41.75 md:group-hover:h-46.75">
                     <div className="h-full w-full bg-white" />
                   </div>
-                  <span className="flex items-center justify-between text-base opacity-50 transition-opacity duration-300 group-hover:opacity-100">
+                  <span className="flex items-center justify-between text-base opacity-100 transition-opacity duration-300 md:opacity-50 md:group-hover:opacity-100">
                     {project.title}
                     <Image
                       src="/images/arrow.svg"

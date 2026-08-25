@@ -7,6 +7,7 @@ type HoverIconProps = {
   height: number;
   className?: string;
   delayMs?: number;
+  sizeClassName?: string;
 };
 
 // Same up-and-swap reveal as HoverLetters, applied to an icon instead of a
@@ -19,11 +20,12 @@ export default function HoverIcon({
   height,
   className = "",
   delayMs = 0,
+  sizeClassName,
 }: HoverIconProps) {
   return (
     <span
-      className="inline-block overflow-hidden"
-      style={{ width, height }}
+      className={`inline-block overflow-hidden ${sizeClassName ?? ""}`}
+      style={sizeClassName ? undefined : { width, height }}
       aria-hidden="true"
     >
       <span
