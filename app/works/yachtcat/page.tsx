@@ -5,6 +5,7 @@ import HoverLetters from "../../components/HoverLetters";
 import HoverIcon from "../../components/HoverIcon";
 
 const meta = "Yachtcat / Website Design / 2026";
+const externalUrl = "https://yachtcat-production.up.railway.app/en";
 
 const sections = [
   {
@@ -13,7 +14,7 @@ const sections = [
   },
   {
     label: "APPROACH",
-    text: "I built the design from the ground up, starting with visual identity before touching layout. The direction centered on restraint: generous negative space, cinematic full-bleed imagery and video, and a quiet, confident typographic system, letting the yachts themselves carry the weight of the story rather than dense copy or decoration. I also directed the photography approach used across the site, making sure every image reinforced the same mood of precision and freedom that defines the brand line, \"designed to sail beyond.\"",
+    text: 'I built the design from the ground up, starting with visual identity before touching layout. The direction centered on restraint: generous negative space, cinematic full-bleed imagery and video, and a quiet, confident typographic system, letting the yachts themselves carry the weight of the story rather than dense copy or decoration. I also directed the photography approach used across the site, making sure every image reinforced the same mood of precision and freedom that defines the brand line, "designed to sail beyond."',
   },
   {
     label: "BUILD",
@@ -29,48 +30,62 @@ export default function YachtcatProject() {
   return (
     <div className="relative flex h-screen w-full flex-col overflow-hidden overscroll-none bg-[#080808] font-mono text-white">
       <div className="pointer-events-none absolute inset-x-0 top-[45%] bottom-0 z-0">
-        <Image alt="" src="/images/grid.svg" fill priority className="object-cover" />
+        <Image
+          alt=""
+          src="/images/grid.svg"
+          fill
+          priority
+          className="object-cover"
+        />
       </div>
 
       <Navbar variant="simple" />
 
       <a
-        href="/"
+        href="/works"
         aria-label="Back to Works"
         className="relative z-10 flex shrink-0 items-center border-y border-white/15 px-10 py-4 text-base"
       >
         <span className="group inline-flex items-center gap-2.5">
-          <HoverIcon src="/images/arrow.svg" width={24} height={24} delayMs={0} />
+          <HoverIcon
+            src="/images/arrow.svg"
+            width={24}
+            height={24}
+            delayMs={0}
+          />
           <HoverLetters text="Back to Works" staggerMs={HOVER_STAGGER_MS} />
         </span>
       </a>
 
       <div className="relative z-10 flex min-h-0 flex-1">
         <div className="scrollbar-none flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto border-r border-white/15 p-4">
-          <div className="h-110.5 w-full shrink-0 rounded-sm bg-white" />
+          <div className="h-110.5 w-full shrink-0 bg-white" />
           <div className="flex w-full shrink-0 items-center gap-2">
-            <div className="h-110.5 min-w-px flex-1 rounded-sm bg-white" />
-            <div className="h-110.5 min-w-px flex-1 rounded-sm bg-white" />
+            <div className="h-110.5 min-w-px flex-1 bg-white" />
+            <div className="h-110.5 min-w-px flex-1 bg-white" />
           </div>
           <div className="flex w-full shrink-0 items-center gap-2">
-            <div className="h-110.5 w-94.5 shrink-0 rounded-sm bg-white" />
-            <div className="h-110.5 min-w-px flex-1 rounded-sm bg-white" />
+            <div className="h-110.5 w-94.5 shrink-0 bg-white" />
+            <div className="h-110.5 min-w-px flex-1 bg-white" />
           </div>
-          <div className="h-110.5 w-full shrink-0 rounded-sm bg-white" />
+          <div className="h-110.5 w-full shrink-0 bg-white" />
           <div className="flex w-full shrink-0 items-center gap-2">
-            <div className="h-110.5 min-w-px flex-1 rounded-sm bg-white" />
-            <div className="h-110.5 min-w-px flex-1 rounded-sm bg-white" />
+            <div className="h-110.5 min-w-px flex-1 bg-white" />
+            <div className="h-110.5 min-w-px flex-1 bg-white" />
           </div>
           <div className="flex w-full shrink-0 items-center gap-2">
-            <div className="h-110.5 w-94.5 shrink-0 rounded-sm bg-white" />
-            <div className="h-110.5 min-w-px flex-1 rounded-sm bg-white" />
+            <div className="h-110.5 w-94.5 shrink-0 bg-white" />
+            <div className="h-110.5 min-w-px flex-1 bg-white" />
           </div>
         </div>
 
         <div className="relative flex w-123.5 shrink-0 flex-col border-b border-white/15">
           <div className="flex shrink-0 flex-col items-end border-b border-white/15 p-4">
-            <div className="flex w-full items-center justify-end py-1 text-sm">
+            <div className="flex w-full items-center justify-end gap-4 py-1 text-sm">
               <p className="text-right">{meta}</p>
+              <a href={externalUrl} target="_blank" rel="noopener noreferrer" aria-label="Visit live site">
+                <Image src="/images/external-link.svg" alt="" width={24} height={24} />
+              </a>
             </div>
           </div>
 

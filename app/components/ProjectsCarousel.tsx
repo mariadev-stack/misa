@@ -2,24 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
-
-type Project = {
-  title: string;
-  year: string;
-  tags: string[];
-  href?: string;
-};
-
-const projects: Project[] = [
-  { title: "SUNO", year: "2025", tags: ["Product Design"], href: "/works/suno" },
-  { title: "Connect IoT", year: "2024", tags: ["Product Design"], href: "/works/connect-iot" },
-  { title: "Be!", year: "2025", tags: ["Product Design"], href: "/works/be" },
-  { title: "TARQ", year: "2026", tags: ["Website Design"], href: "/works/tarq" },
-  { title: "The Somos Hotel", year: "2023", tags: ["Website Design"], href: "/works/the-somos-hotel" },
-  { title: "ONX", year: "2026", tags: ["Website Design"], href: "/works/onx" },
-  { title: "Hidroituango", year: "2025", tags: ["Website Design"], href: "/works/hidroituango" },
-  { title: "Yachtcat", year: "2026", tags: ["Website Design"], href: "/works/yachtcat" },
-];
+import { projects } from "../data/projects";
 
 const track = [...projects, ...projects, ...projects];
 
@@ -123,10 +106,17 @@ export default function ProjectsCarousel() {
       ref={trackRef}
       className="ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] flex h-full min-h-0 w-screen shrink snap-x snap-mandatory gap-1 overflow-x-auto overscroll-x-contain scroll-smooth scrollbar-none"
     >
-      {track.map((project, index) => {
-        const card = (
-          <>
-            <div className="w-full min-h-0 flex-1 rounded-sm bg-white" />
+      {track.map((project, index) => (
+        <article
+          key={index}
+          className="flex h-full w-screen min-h-0 shrink-0 snap-center flex-col items-start gap-2 px-10"
+        >
+          <Link
+            href={project.href}
+            aria-label={project.title}
+            className="flex h-full min-h-0 w-full flex-col items-start gap-2"
+          >
+            <div className="w-full min-h-0 flex-1 bg-white" />
 
             <div className="flex w-full items-center justify-between">
               <p className="text-[48px] leading-none whitespace-nowrap">
@@ -141,28 +131,9 @@ export default function ProjectsCarousel() {
                 ))}
               </div>
             </div>
-          </>
-        );
-
-        return (
-          <article
-            key={index}
-            className="flex h-full w-screen min-h-0 shrink-0 snap-center flex-col items-start gap-2 px-10"
-          >
-            {project.href ? (
-              <Link
-                href={project.href}
-                aria-label={project.title}
-                className="flex h-full min-h-0 w-full flex-col items-start gap-2"
-              >
-                {card}
-              </Link>
-            ) : (
-              card
-            )}
-          </article>
-        );
-      })}
+          </Link>
+        </article>
+      ))}
     </div>
   );
 }

@@ -15,7 +15,7 @@ export default function Home() {
 
       <main className="relative z-10 mt-10 flex h-full flex-1 flex-col items-end justify-end gap-2 px-10 pb-20.5">
         <a
-          href="#works"
+          href="/works"
           aria-label="See All Works"
           className="group flex items-center justify-center gap-2.5 text-base"
         >

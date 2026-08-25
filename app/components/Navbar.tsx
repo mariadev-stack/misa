@@ -8,7 +8,7 @@ export const HOVER_STAGGER_MS = 25;
 const navLinks = ["Web Design", "Design Consultancy", "Art Direction"];
 
 const menuLinks = [
-  { label: "Works", href: "#works" },
+  { label: "Works", href: "/works" },
   { label: "Contact", href: "#contact" },
 ];
 
