@@ -138,7 +138,22 @@ export default function WorksPage() {
                 >
                   <div className="relative h-30.75 w-full shrink-0 overflow-hidden transition-[height] duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] md:h-41.75 md:group-hover:h-46.75">
                     {project.cover ? (
-                      <Image src={project.cover} alt="" fill className="object-cover" />
+                      <>
+                        {project.mobileCover && (
+                          <Image
+                            src={project.mobileCover}
+                            alt=""
+                            fill
+                            className="object-cover md:hidden"
+                          />
+                        )}
+                        <Image
+                          src={project.cover}
+                          alt=""
+                          fill
+                          className={`object-cover ${project.mobileCover ? "hidden md:block" : ""}`}
+                        />
+                      </>
                     ) : (
                       <div className="h-full w-full bg-white" />
                     )}

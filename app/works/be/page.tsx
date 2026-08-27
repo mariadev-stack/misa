@@ -1,6 +1,11 @@
 import ProjectDetail from "../../components/ProjectDetail";
 
 const meta = "Be / Product Design / 2025";
+const coverImage = "/images/work/be/cover-projectdetail-be.jpg";
+const images = Array.from(
+  { length: 9 },
+  (_, i) => `/images/work/be/image-${i + 1}-be.jpg`,
+);
 
 const sections = [
   {
@@ -23,6 +28,12 @@ const sections = [
 
 export default function BeProject() {
   return (
-    <ProjectDetail meta={meta} sections={sections} scrollerId="be-right-panel" />
+    <ProjectDetail
+      meta={meta}
+      sections={sections}
+      scrollerId="be-right-panel"
+      coverImage={coverImage}
+      images={images}
+    />
   );
 }
