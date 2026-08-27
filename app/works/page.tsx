@@ -108,9 +108,19 @@ export default function WorksPage() {
                 opacity: hovered !== null ? 1 : 0,
               }}
             >
-              {hovered !== null && (
-                <div key={hovered} className="grow-from-zero h-full w-full bg-white" />
-              )}
+              {hovered !== null &&
+                (projects[hovered].cover ? (
+                  <div key={hovered} className="grow-from-zero relative h-full w-full overflow-hidden">
+                    <Image
+                      src={projects[hovered].cover}
+                      alt=""
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div key={hovered} className="grow-from-zero h-full w-full bg-white" />
+                ))}
             </div>
           </div>
         ) : (
@@ -126,8 +136,12 @@ export default function WorksPage() {
                   aria-label={project.title}
                   className="group flex flex-col gap-4 md:h-56.75"
                 >
-                  <div className="h-30.75 w-full shrink-0 overflow-hidden transition-[height] duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] md:h-41.75 md:group-hover:h-46.75">
-                    <div className="h-full w-full bg-white" />
+                  <div className="relative h-30.75 w-full shrink-0 overflow-hidden transition-[height] duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] md:h-41.75 md:group-hover:h-46.75">
+                    {project.cover ? (
+                      <Image src={project.cover} alt="" fill className="object-cover" />
+                    ) : (
+                      <div className="h-full w-full bg-white" />
+                    )}
                   </div>
                   <span className="flex items-center justify-between text-base opacity-100 transition-opacity duration-300 md:opacity-50 md:group-hover:opacity-100">
                     {project.title}

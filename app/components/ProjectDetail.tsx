@@ -18,6 +18,8 @@ type ProjectDetailProps = {
   sections: Section[];
   scrollerId: string;
   externalUrl?: string;
+  coverImage?: string;
+  images?: string[];
 };
 
 export default function ProjectDetail({
@@ -25,8 +27,23 @@ export default function ProjectDetail({
   sections,
   scrollerId,
   externalUrl,
+  coverImage,
+  images,
 }: ProjectDetailProps) {
   const [openIndex, setOpenIndex] = useState(0);
+
+  // Renders one gallery box: the real image at `images[index]` when it
+  // exists, falling back to the white placeholder otherwise.
+  function GallerySlot({ index, className }: { index: number; className: string }) {
+    const src = images?.[index];
+    return src ? (
+      <div className={`relative ${className}`}>
+        <Image src={src} alt="" fill className="object-cover" />
+      </div>
+    ) : (
+      <div className={`${className} bg-white`} />
+    );
+  }
 
   return (
     <div className="relative flex h-screen w-full flex-col overflow-hidden overscroll-none bg-[#080808] font-mono text-white md:overflow-hidden">
@@ -57,7 +74,13 @@ export default function ProjectDetail({
         className="scrollbar-none relative z-10 flex min-h-0 flex-1 flex-col overflow-y-auto md:hidden"
       >
         <div className="mt-4 border-t border-white/15 p-4">
-          <div className="h-41.5 w-full bg-white" />
+          {coverImage ? (
+            <div className="relative h-41.5 w-full">
+              <Image src={coverImage} alt="" fill priority className="object-cover" />
+            </div>
+          ) : (
+            <div className="h-41.5 w-full bg-white" />
+          )}
         </div>
 
         <div className="flex items-center gap-6 border-t border-b border-white/15 p-4">
@@ -100,13 +123,23 @@ export default function ProjectDetail({
         </div>
 
         <div className="flex flex-col gap-2 border-t border-white/15 p-4">
-          <div className="h-55.5 w-full bg-white" />
           <div className="flex h-51.25 items-center gap-2">
-            <div className="h-full min-w-px flex-1 bg-white" />
-            <div className="h-full min-w-px flex-1 bg-white" />
+            <GallerySlot index={0} className="h-full min-w-px flex-1" />
+            <GallerySlot index={1} className="h-full min-w-px flex-1" />
           </div>
-          <div className="h-39.5 w-full bg-white" />
-          <div className="h-39.5 w-full bg-white" />
+          <div className="flex h-51.25 items-center gap-2">
+            <GallerySlot index={2} className="h-full w-2/5 shrink-0" />
+            <GallerySlot index={3} className="h-full min-w-px flex-1" />
+          </div>
+          <GallerySlot index={4} className="h-51.25 w-full" />
+          <div className="flex h-51.25 items-center gap-2">
+            <GallerySlot index={5} className="h-full min-w-px flex-1" />
+            <GallerySlot index={6} className="h-full min-w-px flex-1" />
+          </div>
+          <div className="flex h-51.25 items-center gap-2">
+            <GallerySlot index={7} className="h-full w-2/5 shrink-0" />
+            <GallerySlot index={8} className="h-full min-w-px flex-1" />
+          </div>
         </div>
 
         <div className="flex items-end justify-center gap-2.5 bg-linear-to-b from-transparent to-[#080808] px-2.5 py-6">
@@ -150,23 +183,29 @@ export default function ProjectDetail({
 
       <div className="relative z-10 hidden min-h-0 flex-1 md:flex">
         <div className="scrollbar-none flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto border-r border-white/15 p-4">
-          <div className="h-110.5 w-full shrink-0 bg-white" />
+          {coverImage ? (
+            <div className="relative h-110.5 w-full shrink-0">
+              <Image src={coverImage} alt="" fill priority className="object-cover" />
+            </div>
+          ) : (
+            <div className="h-110.5 w-full shrink-0 bg-white" />
+          )}
           <div className="flex w-full shrink-0 items-center gap-2">
-            <div className="h-110.5 min-w-px flex-1 bg-white" />
-            <div className="h-110.5 min-w-px flex-1 bg-white" />
+            <GallerySlot index={0} className="h-110.5 min-w-px flex-1" />
+            <GallerySlot index={1} className="h-110.5 min-w-px flex-1" />
           </div>
           <div className="flex w-full shrink-0 items-center gap-2">
-            <div className="h-110.5 w-94.5 shrink-0 bg-white" />
-            <div className="h-110.5 min-w-px flex-1 bg-white" />
+            <GallerySlot index={2} className="h-110.5 w-94.5 shrink-0" />
+            <GallerySlot index={3} className="h-110.5 min-w-px flex-1" />
           </div>
-          <div className="h-110.5 w-full shrink-0 bg-white" />
+          <GallerySlot index={4} className="h-110.5 w-full shrink-0" />
           <div className="flex w-full shrink-0 items-center gap-2">
-            <div className="h-110.5 min-w-px flex-1 bg-white" />
-            <div className="h-110.5 min-w-px flex-1 bg-white" />
+            <GallerySlot index={5} className="h-110.5 min-w-px flex-1" />
+            <GallerySlot index={6} className="h-110.5 min-w-px flex-1" />
           </div>
           <div className="flex w-full shrink-0 items-center gap-2">
-            <div className="h-110.5 w-94.5 shrink-0 bg-white" />
-            <div className="h-110.5 min-w-px flex-1 bg-white" />
+            <GallerySlot index={7} className="h-110.5 w-94.5 shrink-0" />
+            <GallerySlot index={8} className="h-110.5 min-w-px flex-1" />
           </div>
         </div>
 

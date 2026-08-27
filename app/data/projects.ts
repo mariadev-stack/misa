@@ -3,10 +3,17 @@ export type Project = {
   year: string;
   tags: string[];
   href: string;
+  cover?: string;
 };
 
 export const projects: Project[] = [
-  { title: "SUNO", year: "2025", tags: ["Product Design"], href: "/works/suno" },
+  {
+    title: "SUNO",
+    year: "2025",
+    tags: ["Product Design"],
+    href: "/works/suno",
+    cover: "/images/work/suno/cover-suno.png",
+  },
   { title: "Connect IoT", year: "2024", tags: ["Product Design"], href: "/works/connect-iot" },
   { title: "Be!", year: "2025", tags: ["Product Design"], href: "/works/be" },
   { title: "TARQ", year: "2026", tags: ["Website Design"], href: "/works/tarq" },

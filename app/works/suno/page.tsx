@@ -2,6 +2,11 @@ import ProjectDetail from "../../components/ProjectDetail";
 
 const meta = "Suno / Product Design / 2026";
 const externalUrl = "https://suno.finance/";
+const coverImage = "/images/work/suno/cover-projectdetail-suno.png";
+const images = Array.from(
+  { length: 9 },
+  (_, i) => `/images/work/suno/image-${i + 1}-suno.png`,
+);
 
 const sections = [
   {
@@ -29,6 +34,8 @@ export default function SunoProject() {
       sections={sections}
       scrollerId="suno-right-panel"
       externalUrl={externalUrl}
+      coverImage={coverImage}
+      images={images}
     />
   );
 }

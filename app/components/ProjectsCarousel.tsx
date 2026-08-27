@@ -1,10 +1,15 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { projects } from "../data/projects";
 
 const track = [...projects, ...projects, ...projects];
+
+// How long the carousel waits with no user interaction before it
+// auto-advances to the next card.
+const AUTO_ADVANCE_IDLE_MS = 5000;
 
 export default function ProjectsCarousel() {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -14,6 +19,32 @@ export default function ProjectsCarousel() {
     if (!el) return;
 
     let raf = 0;
+    let autoAdvanceTimer = 0;
+
+    // Distance to the next snap point: one card's width plus the gap the
+    // track lays cards out with (reads the live CSS value instead of
+    // hardcoding the gap-1 class so this keeps working if that changes).
+    function cardStep() {
+      const first = el!.children[0] as HTMLElement | undefined;
+      const gap = parseFloat(getComputedStyle(el!).columnGap || "0");
+      return (first?.offsetWidth ?? 0) + gap;
+    }
+
+    function scheduleAutoAdvance() {
+      window.clearTimeout(autoAdvanceTimer);
+      autoAdvanceTimer = window.setTimeout(() => {
+        el!.scrollBy({ left: cardStep(), behavior: "smooth" });
+        scheduleAutoAdvance();
+      }, AUTO_ADVANCE_IDLE_MS);
+    }
+
+    // Any deliberate user interaction resets the idle clock so auto-advance
+    // only kicks in once they've actually stopped engaging with the page.
+    function onActivity() {
+      scheduleAutoAdvance();
+    }
+    const activityEvents = ["pointerdown", "touchstart", "keydown", "click"] as const;
+    activityEvents.forEach((evt) => window.addEventListener(evt, onActivity));
 
     // Jump a card container by exactly one set-width without letting
     // scroll-snap or CSS smooth-scrolling animate or fight the change.
@@ -79,6 +110,7 @@ export default function ProjectsCarousel() {
             el!.style.scrollSnapType = "";
             el!.style.scrollBehavior = "";
             raf = requestAnimationFrame(loopWrap);
+            scheduleAutoAdvance();
           }
         }
         raf = requestAnimationFrame(intro);
@@ -92,11 +124,14 @@ export default function ProjectsCarousel() {
       if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
         e.preventDefault();
       }
+      onActivity();
     }
     el.addEventListener("wheel", onWheel, { passive: false });
 
     return () => {
       cancelAnimationFrame(raf);
+      window.clearTimeout(autoAdvanceTimer);
+      activityEvents.forEach((evt) => window.removeEventListener(evt, onActivity));
       el.removeEventListener("wheel", onWheel);
     };
   }, []);
@@ -116,9 +151,20 @@ export default function ProjectsCarousel() {
             aria-label={project.title}
             className="flex h-full min-h-0 w-full flex-col items-start gap-2"
           >
-            <div className="w-full min-h-0 flex-1 bg-white" />
+            {project.cover ? (
+              <div className="relative w-full min-h-0 flex-1">
+                <Image
+                  src={project.cover}
+                  alt=""
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            ) : (
+              <div className="w-full min-h-0 flex-1 bg-white" />
+            )}
 
-            <div className="flex w-full items-center justify-between">
+            <div className="flex w-full items-end justify-between">
               <p className="text-[30px] leading-none whitespace-nowrap md:text-[48px]">
                 {project.title}
               </p>
