@@ -3,6 +3,11 @@ import ProjectDetail from "../../components/ProjectDetail";
 const meta = "Connect IoT / Product Design / 2024";
 const externalUrl =
   "https://apps.apple.com/us/app/smartlink-professional/id6737324185";
+const coverImage = "/images/work/connect-iot/cover-projectdetail-connect.jpg";
+const images = Array.from(
+  { length: 12 },
+  (_, i) => `/images/work/connect-iot/image-${i + 1}-connect.jpg`,
+);
 
 const sections = [
   {
@@ -30,6 +35,8 @@ export default function ConnectIotProject() {
       sections={sections}
       scrollerId="connect-iot-right-panel"
       externalUrl={externalUrl}
+      coverImage={coverImage}
+      images={images}
     />
   );
 }

@@ -2,10 +2,10 @@ import ProjectDetail from "../../components/ProjectDetail";
 
 const meta = "Suno / Product Design / 2026";
 const externalUrl = "https://suno.finance/";
-const coverImage = "/images/work/suno/cover-projectdetail-suno.png";
+const coverImage = "/images/work/suno/cover-projectdetail-suno.jpg";
 const images = Array.from(
-  { length: 9 },
-  (_, i) => `/images/work/suno/image-${i + 1}-suno.png`,
+  { length: 14 },
+  (_, i) => `/images/work/suno/image-${i + 1}-suno.jpg`,
 );
 
 const sections = [

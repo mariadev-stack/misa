@@ -13,6 +13,31 @@ type Section = {
   text: string;
 };
 
+type GalleryRow = { type: "pair" | "uneven" | "full"; indices: number[] };
+
+// Splits `count` images into rows following a repeating
+// [pair, uneven-pair, full-width] cycle — the rhythm every project gallery
+// has used so far. A leftover of exactly one image (can't fill a pair or
+// uneven-pair) falls back to a full-width row instead of being dropped.
+function buildGalleryRows(count: number): GalleryRow[] {
+  const cycle: GalleryRow["type"][] = ["pair", "uneven", "full"];
+  const rows: GalleryRow[] = [];
+  let i = 0;
+  let step = 0;
+  while (i < count) {
+    const type = cycle[step % cycle.length];
+    const need = type === "full" ? 1 : 2;
+    if (count - i < need) {
+      rows.push({ type: "full", indices: [i] });
+      break;
+    }
+    rows.push({ type, indices: Array.from({ length: need }, (_, k) => i + k) });
+    i += need;
+    step++;
+  }
+  return rows;
+}
+
 type ProjectDetailProps = {
   meta: string;
   sections: Section[];
@@ -42,6 +67,55 @@ export default function ProjectDetail({
       </div>
     ) : (
       <div className={`${className} bg-white`} />
+    );
+  }
+
+  // Lays the gallery out as a repeating [pair, uneven-pair, full-width] cycle
+  // — the rhythm every project's image set has followed so far — sized to
+  // however many images this project actually has, instead of a fixed count.
+  const galleryRows = buildGalleryRows(images?.length ?? 0);
+
+  function GalleryGrid({
+    heightClass,
+    narrowWidthClass,
+    shrink0,
+  }: {
+    heightClass: string;
+    narrowWidthClass: string;
+    shrink0: boolean;
+  }) {
+    const rowShrink = shrink0 ? " shrink-0" : "";
+    return (
+      <>
+        {galleryRows.map((row, i) => {
+          if (row.type === "full") {
+            return (
+              <GallerySlot
+                key={i}
+                index={row.indices[0]}
+                className={`${heightClass} w-full${rowShrink}`}
+              />
+            );
+          }
+          const isUneven = row.type === "uneven";
+          return (
+            <div key={i} className={`flex w-full${rowShrink} items-center gap-2`}>
+              <GallerySlot
+                index={row.indices[0]}
+                className={
+                  isUneven
+                    ? `${heightClass} ${narrowWidthClass} shrink-0`
+                    : `${heightClass} min-w-px flex-1`
+                }
+              />
+              <GallerySlot
+                index={row.indices[1]}
+                className={`${heightClass} min-w-px flex-1`}
+              />
+            </div>
+          );
+        })}
+      </>
     );
   }
 
@@ -123,23 +197,7 @@ export default function ProjectDetail({
         </div>
 
         <div className="flex flex-col gap-2 border-t border-white/15 p-4">
-          <div className="flex h-51.25 items-center gap-2">
-            <GallerySlot index={0} className="h-full min-w-px flex-1" />
-            <GallerySlot index={1} className="h-full min-w-px flex-1" />
-          </div>
-          <div className="flex h-51.25 items-center gap-2">
-            <GallerySlot index={2} className="h-full w-2/5 shrink-0" />
-            <GallerySlot index={3} className="h-full min-w-px flex-1" />
-          </div>
-          <GallerySlot index={4} className="h-51.25 w-full" />
-          <div className="flex h-51.25 items-center gap-2">
-            <GallerySlot index={5} className="h-full min-w-px flex-1" />
-            <GallerySlot index={6} className="h-full min-w-px flex-1" />
-          </div>
-          <div className="flex h-51.25 items-center gap-2">
-            <GallerySlot index={7} className="h-full w-2/5 shrink-0" />
-            <GallerySlot index={8} className="h-full min-w-px flex-1" />
-          </div>
+          <GalleryGrid heightClass="h-51.25" narrowWidthClass="w-2/5" shrink0={false} />
         </div>
 
         <div className="flex items-end justify-center gap-2.5 bg-linear-to-b from-transparent to-[#080808] px-2.5 py-6">
@@ -190,23 +248,7 @@ export default function ProjectDetail({
           ) : (
             <div className="h-110.5 w-full shrink-0 bg-white" />
           )}
-          <div className="flex w-full shrink-0 items-center gap-2">
-            <GallerySlot index={0} className="h-110.5 min-w-px flex-1" />
-            <GallerySlot index={1} className="h-110.5 min-w-px flex-1" />
-          </div>
-          <div className="flex w-full shrink-0 items-center gap-2">
-            <GallerySlot index={2} className="h-110.5 w-94.5 shrink-0" />
-            <GallerySlot index={3} className="h-110.5 min-w-px flex-1" />
-          </div>
-          <GallerySlot index={4} className="h-110.5 w-full shrink-0" />
-          <div className="flex w-full shrink-0 items-center gap-2">
-            <GallerySlot index={5} className="h-110.5 min-w-px flex-1" />
-            <GallerySlot index={6} className="h-110.5 min-w-px flex-1" />
-          </div>
-          <div className="flex w-full shrink-0 items-center gap-2">
-            <GallerySlot index={7} className="h-110.5 w-94.5 shrink-0" />
-            <GallerySlot index={8} className="h-110.5 min-w-px flex-1" />
-          </div>
+          <GalleryGrid heightClass="h-110.5" narrowWidthClass="w-94.5" shrink0={true} />
         </div>
 
         <div className="relative flex w-123.5 shrink-0 flex-col border-b border-white/15">
