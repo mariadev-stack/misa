@@ -200,7 +200,7 @@ export default function ProjectDetail({
           <GalleryGrid heightClass="h-51.25" narrowWidthClass="w-2/5" shrink0={false} />
         </div>
 
-        <div className="flex items-end justify-center gap-2.5 bg-linear-to-b from-transparent to-[#080808] px-2.5 py-6">
+        <div className="flex items-end justify-center gap-2.5 bg-linear-to-b from-transparent to-[#080808] px-2.5 pt-10 pb-6">
           <Shuffle
             text="Need something like this?"
             tag="p"
@@ -217,7 +217,13 @@ export default function ProjectDetail({
             className="flex shrink-0 items-center gap-2 text-sm uppercase"
           >
             <span>LET&apos;S TALK</span>
-            <Image src="/images/arrow.svg" alt="" width={16} height={16} />
+            <Image
+              src="/images/arrow.svg"
+              alt=""
+              width={16}
+              height={16}
+              className="-scale-x-100"
+            />
           </a>
         </div>
       </div>
