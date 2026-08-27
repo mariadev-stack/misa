@@ -5,6 +5,9 @@ export type Project = {
   href: string;
   cover?: string;
   mobileCover?: string;
+  // Overrides mobileCover for the Works page grid view specifically, for
+  // projects that want a different crop there than on the homepage card.
+  mobileGridCover?: string;
 };
 
 export const projects: Project[] = [
@@ -31,6 +34,7 @@ export const projects: Project[] = [
     href: "/works/be",
     cover: "/images/work/be/cover-be.jpg",
     mobileCover: "/images/work/be/mobile-cover-be.jpg",
+    mobileGridCover: "/images/work/be/mobile-grid-be.jpg",
   },
   { title: "TARQ", year: "2026", tags: ["Website Design"], href: "/works/tarq" },
   { title: "The Somos", year: "2023", tags: ["Website Design"], href: "/works/the-somos-hotel" },
