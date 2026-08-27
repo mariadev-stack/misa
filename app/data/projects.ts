@@ -4,6 +4,7 @@ export type Project = {
   tags: string[];
   href: string;
   cover?: string;
+  mobileCover?: string;
 };
 
 export const projects: Project[] = [
@@ -13,6 +14,7 @@ export const projects: Project[] = [
     tags: ["Product Design"],
     href: "/works/suno",
     cover: "/images/work/suno/cover-suno.png",
+    mobileCover: "/images/work/suno/mobile-cover-suno.png",
   },
   { title: "Connect IoT", year: "2024", tags: ["Product Design"], href: "/works/connect-iot" },
   { title: "Be!", year: "2025", tags: ["Product Design"], href: "/works/be" },

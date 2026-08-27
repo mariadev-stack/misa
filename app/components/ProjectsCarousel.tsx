@@ -153,11 +153,19 @@ export default function ProjectsCarousel() {
           >
             {project.cover ? (
               <div className="relative w-full min-h-0 flex-1">
+                {project.mobileCover && (
+                  <Image
+                    src={project.mobileCover}
+                    alt=""
+                    fill
+                    className="object-cover md:hidden"
+                  />
+                )}
                 <Image
                   src={project.cover}
                   alt=""
                   fill
-                  className="object-cover"
+                  className={`object-cover ${project.mobileCover ? "hidden md:block" : ""}`}
                 />
               </div>
             ) : (
