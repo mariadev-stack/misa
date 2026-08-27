@@ -80,7 +80,7 @@ export default function Navbar({
         </div>
 
         {variant === "home" && mobileCategories && (
-          <nav className="flex w-43.25 flex-col gap-1 text-sm">
+          <nav className="flex w-43.25 flex-col gap-2 text-sm">
             {navLinks.map((link) => (
               <Shuffle
                 key={link}

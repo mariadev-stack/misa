@@ -6,14 +6,14 @@ import HoverIcon from "./components/HoverIcon";
 
 export default function Home() {
   return (
-    <div className="relative flex h-screen w-full flex-col overflow-hidden overscroll-none bg-[#080808] font-mono text-white">
+    <div className="relative flex h-dvh w-full flex-col overflow-hidden overscroll-none bg-[#080808] font-mono text-white">
       <div className="pointer-events-none absolute inset-x-0 top-[45%] bottom-0 z-0">
         <Image alt="" src="/images/grid.svg" fill priority className="object-cover" />
       </div>
 
       <Navbar variant="home" />
 
-      <main className="relative z-10 mt-6 flex h-full flex-1 flex-col items-end justify-end gap-2 px-4 pb-6 md:mt-10 md:px-10 md:pb-20.5">
+      <main className="relative z-10 mt-6 flex h-full min-h-0 flex-1 flex-col items-end justify-end gap-2 px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))] md:mt-10 md:px-10 md:pb-20.5">
         <a
           href="/works"
           aria-label="See All Works"
