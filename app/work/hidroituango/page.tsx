@@ -2,6 +2,16 @@ import ProjectDetail from "../../components/ProjectDetail";
 
 const meta = "Hidroituango / Website Design / 2025";
 const externalUrl = "https://www.hidroituango.com.co/es";
+const coverImage = "/images/work/hidroituango/cover-projectdetail-hidro.jpg";
+// Reordered from the export's numeric order to match each image's native
+// aspect to its gallery slot (pair, pair, uneven-narrow, uneven-wide, full).
+const images = [
+  "/images/work/hidroituango/image-2-hidro.jpg",
+  "/images/work/hidroituango/image-3-hidro.jpg",
+  "/images/work/hidroituango/image-4-hidro.jpg",
+  "/images/work/hidroituango/image-5-hidro.jpg",
+  "/images/work/hidroituango/image-6-hidro.jpg",
+];
 
 const sections = [
   {
@@ -29,6 +39,8 @@ export default function HidroituangoProject() {
       sections={sections}
       scrollerId="hidroituango-right-panel"
       externalUrl={externalUrl}
+      coverImage={coverImage}
+      images={images}
     />
   );
 }

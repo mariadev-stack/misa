@@ -1,6 +1,11 @@
 import ProjectDetail from "../../components/ProjectDetail";
 
 const meta = "The Somos Hotel / Website Design / 2023";
+const coverImage = "/images/work/the-somos-hotel/cover-projectdetail-thesomos.jpg";
+const images = Array.from(
+  { length: 5 },
+  (_, i) => `/images/work/the-somos-hotel/image-${i + 1}-thesomos.jpg`,
+);
 
 const sections = [
   {
@@ -27,6 +32,8 @@ export default function TheSomosHotelProject() {
       meta={meta}
       sections={sections}
       scrollerId="the-somos-hotel-right-panel"
+      coverImage={coverImage}
+      images={images}
     />
   );
 }

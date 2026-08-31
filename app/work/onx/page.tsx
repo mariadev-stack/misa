@@ -1,6 +1,11 @@
 import ProjectDetail from "../../components/ProjectDetail";
 
 const meta = "ONX / Website Design / 2026";
+const coverImage = "/images/work/onx/cover-projectdetail-onx.jpg";
+const images = Array.from(
+  { length: 5 },
+  (_, i) => `/images/work/onx/image-${i + 1}-onx.jpg`,
+);
 
 const sections = [
   {
@@ -23,6 +28,12 @@ const sections = [
 
 export default function OnxProject() {
   return (
-    <ProjectDetail meta={meta} sections={sections} scrollerId="onx-right-panel" />
+    <ProjectDetail
+      meta={meta}
+      sections={sections}
+      scrollerId="onx-right-panel"
+      coverImage={coverImage}
+      images={images}
+    />
   );
 }

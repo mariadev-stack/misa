@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
+import ImageWithSkeleton from "../components/ImageWithSkeleton";
 import { projects } from "../data/projects";
 
 type View = "list" | "grid";
@@ -113,7 +114,7 @@ export default function WorksPage() {
                   const thumbSrc = projects[hovered].mobileCover ?? projects[hovered].cover;
                   return thumbSrc ? (
                     <div key={hovered} className="grow-from-zero relative h-full w-full overflow-hidden">
-                      <Image src={thumbSrc} alt="" fill className="object-cover" />
+                      <ImageWithSkeleton src={thumbSrc} alt="" className="object-cover" />
                     </div>
                   ) : (
                     <div key={hovered} className="grow-from-zero h-full w-full bg-white" />
@@ -136,6 +137,15 @@ export default function WorksPage() {
                 >
                   <div className="relative h-30.75 w-full shrink-0 overflow-hidden transition-[height] duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] md:h-41.75 md:group-hover:h-46.75">
                     {(() => {
+                      if (project.gridCover) {
+                        return (
+                          <ImageWithSkeleton
+                            src={project.gridCover}
+                            alt=""
+                            className="object-cover"
+                          />
+                        );
+                      }
                       const gridMobileCover = project.mobileGridCover ?? project.mobileCover;
                       if (!project.cover) {
                         return <div className="h-full w-full bg-white" />;
@@ -143,18 +153,18 @@ export default function WorksPage() {
                       return (
                         <>
                           {gridMobileCover && (
-                            <Image
+                            <ImageWithSkeleton
                               src={gridMobileCover}
                               alt=""
-                              fill
-                              className="object-cover md:hidden"
+                              className="object-cover"
+                              wrapperClassName="md:hidden"
                             />
                           )}
-                          <Image
+                          <ImageWithSkeleton
                             src={project.cover}
                             alt=""
-                            fill
-                            className={`object-cover ${gridMobileCover ? "hidden md:block" : ""}`}
+                            className="object-cover"
+                            wrapperClassName={gridMobileCover ? "hidden md:block" : ""}
                           />
                         </>
                       );

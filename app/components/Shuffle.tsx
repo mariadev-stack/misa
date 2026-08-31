@@ -27,6 +27,8 @@ type ShuffleProps = {
   scroller?: string | Element;
   /** Replay the shuffle on a timer (ms) after it first plays, to draw the eye back to it periodically. */
   repeatIntervalMs?: number;
+  /** Fired every time a shuffle animation starts (initial play, hover replay, and each repeat), so a sibling element can stay in sync. */
+  onPlay?: () => void;
 };
 
 export default function Shuffle({
@@ -44,6 +46,7 @@ export default function Shuffle({
   triggerOnHover = true,
   scroller,
   repeatIntervalMs,
+  onPlay,
 }: ShuffleProps) {
   const ref = useRef<HTMLElement | null>(null);
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -231,6 +234,7 @@ export default function Shuffle({
         if (!strips.length) return;
 
         playingRef.current = true;
+        onPlay?.();
         const isVertical = shuffleDirection === "up" || shuffleDirection === "down";
 
         const tl = gsap.timeline({
@@ -324,7 +328,7 @@ export default function Shuffle({
       };
     },
     {
-      dependencies: [text, duration, ease, fontsLoaded, shuffleDirection, shuffleTimes, stagger, triggerOnce, triggerOnHover, scroller, repeatIntervalMs],
+      dependencies: [text, duration, ease, fontsLoaded, shuffleDirection, shuffleTimes, stagger, triggerOnce, triggerOnHover, scroller, repeatIntervalMs, onPlay],
       scope: ref as React.RefObject<HTMLElement>,
     }
   );

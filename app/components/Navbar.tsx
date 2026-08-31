@@ -9,8 +9,8 @@ export const HOVER_STAGGER_MS = 25;
 const navLinks = ["Web Design", "Design Consultancy", "Art Direction"];
 
 const menuLinks = [
-  { label: "Works", href: "/works" },
-  { label: "Contact", href: "#contact" },
+  { label: "Work", href: "/work" },
+  { label: "Contact", href: "/contact" },
 ];
 
 type NavbarProps = {
@@ -25,9 +25,9 @@ export default function Navbar({
   return (
     <header className="relative z-10">
       {/* Mobile: both variants share this layout — MISA plus a stacked
-          Works/Contact/Email me column — since the "Back to Works" bar
+          Work/Contact/Email me column — since the "Back to Work" bar
           the desktop "simple" variant relies on doesn't exist on mobile;
-          the header's own Works link takes over that job. Nav categories
+          the header's own Work link takes over that job. Nav categories
           only show for the home variant (and only when explicitly asked
           for), moved into their own row below the header since there's no
           room to keep them inline. Hover-swap letters/icons are skipped

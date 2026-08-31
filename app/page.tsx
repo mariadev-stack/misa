@@ -15,18 +15,18 @@ export default function Home() {
 
       <main className="relative z-10 mt-6 flex h-full min-h-0 flex-1 flex-col items-end justify-end gap-2 px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))] md:mt-10 md:px-10 md:pb-20.5">
         <a
-          href="/works"
-          aria-label="See All Works"
+          href="/work"
+          aria-label="See All Work"
           className="group flex items-center justify-center gap-2.5 text-sm md:text-base"
         >
-          <HoverLetters text="See All Works" />
+          <HoverLetters text="See All Work" />
           <HoverIcon
             src="/images/arrow.svg"
             width={24}
             height={24}
             className="-scale-x-100"
             sizeClassName="size-4 md:size-6"
-            delayMs={"See All Works".length * HOVER_STAGGER_MS}
+            delayMs={"See All Work".length * HOVER_STAGGER_MS}
           />
         </a>
         <ProjectsCarousel />

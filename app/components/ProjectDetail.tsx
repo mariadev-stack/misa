@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import ImageWithSkeleton from "./ImageWithSkeleton";
 import Navbar, { HOVER_STAGGER_MS } from "./Navbar";
 import Shuffle from "./Shuffle";
 import HoverLetters from "./HoverLetters";
@@ -63,7 +64,7 @@ export default function ProjectDetail({
     const src = images?.[index];
     return src ? (
       <div className={`relative ${className}`}>
-        <Image src={src} alt="" fill className="object-cover" />
+        <ImageWithSkeleton src={src} alt="" className="object-cover" />
       </div>
     ) : (
       <div className={`${className} bg-white`} />
@@ -133,8 +134,8 @@ export default function ProjectDetail({
 
       <Navbar variant="simple" />
 
-      {/* Mobile: the header's own Works link takes over the "back to
-          works" job, the cover image now sits above the meta line instead
+      {/* Mobile: the header's own Work link takes over the "back to
+          work" job, the cover image now sits above the meta line instead
           of inside the image stack, and Challenge/Approach/Build/Result
           collapse into a tap-to-expand accordion so the page doesn't open
           on a wall of text. The CTA is no longer pinned to the bottom —
@@ -150,7 +151,7 @@ export default function ProjectDetail({
         <div className="mt-4 border-t border-white/15 p-4">
           {coverImage ? (
             <div className="relative h-41.5 w-full">
-              <Image src={coverImage} alt="" fill priority className="object-cover" />
+              <ImageWithSkeleton src={coverImage} alt="" priority className="object-cover" />
             </div>
           ) : (
             <div className="h-41.5 w-full bg-white" />
@@ -230,8 +231,8 @@ export default function ProjectDetail({
 
       {/* Desktop: unchanged from before. */}
       <a
-        href="/works"
-        aria-label="Back to Works"
+        href="/work"
+        aria-label="Back to Work"
         className="relative z-10 hidden shrink-0 items-center border-y border-white/15 px-10 py-4 text-base md:flex"
       >
         <span className="group inline-flex items-center gap-2.5">
@@ -241,7 +242,7 @@ export default function ProjectDetail({
             height={24}
             delayMs={0}
           />
-          <HoverLetters text="Back to Works" staggerMs={HOVER_STAGGER_MS} />
+          <HoverLetters text="Back to Work" staggerMs={HOVER_STAGGER_MS} />
         </span>
       </a>
 
@@ -249,7 +250,7 @@ export default function ProjectDetail({
         <div className="scrollbar-none flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto border-r border-white/15 p-4">
           {coverImage ? (
             <div className="relative h-110.5 w-full shrink-0">
-              <Image src={coverImage} alt="" fill priority className="object-cover" />
+              <ImageWithSkeleton src={coverImage} alt="" priority className="object-cover" />
             </div>
           ) : (
             <div className="h-110.5 w-full shrink-0 bg-white" />
