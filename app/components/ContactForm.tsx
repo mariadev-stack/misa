@@ -21,7 +21,7 @@ const TIMELINE_OPTIONS = [
 ];
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const FALLBACK_EMAIL = "hello@misa.studio";
+const FALLBACK_EMAIL = "maria@studiomisa.com";
 
 type Errors = Partial<Record<"name" | "email" | "message", string>>;
 type Status = "idle" | "submitting" | "success" | "error";

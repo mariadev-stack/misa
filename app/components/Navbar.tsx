@@ -63,7 +63,8 @@ export default function Navbar({
                 />
               </a>
             ))}
-            <p
+            <a
+              href="mailto:maria@studiomisa.com"
               aria-label="Email me"
               className="flex items-center justify-between gap-2.5"
             >
@@ -75,7 +76,7 @@ export default function Navbar({
                 height={16}
                 className="-scale-x-100"
               />
-            </p>
+            </a>
           </div>
         </div>
 
@@ -121,9 +122,13 @@ export default function Navbar({
             ))}
           </nav>
 
-          <p className="group cursor-pointer text-base" aria-label="Email me">
+          <a
+            href="mailto:maria@studiomisa.com"
+            className="group cursor-pointer text-base"
+            aria-label="Email me"
+          >
             <HoverLetters text="Email me" />
-          </p>
+          </a>
 
           <div className="absolute top-24.5 left-22.5 flex w-43.25 flex-col gap-1">
             {menuLinks.map((link) => (
@@ -159,9 +164,13 @@ export default function Navbar({
             />
           </Link>
 
-          <p className="group cursor-pointer text-base" aria-label="Email me">
+          <a
+            href="mailto:maria@studiomisa.com"
+            className="group cursor-pointer text-base"
+            aria-label="Email me"
+          >
             <HoverLetters text="Email me" />
-          </p>
+          </a>
         </div>
       )}
     </header>

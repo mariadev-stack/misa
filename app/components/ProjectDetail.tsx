@@ -213,7 +213,7 @@ export default function ProjectDetail({
             repeatIntervalMs={8000}
           />
           <a
-            href="mailto:hello@misa.studio"
+            href="mailto:maria@studiomisa.com"
             aria-label="Let's talk"
             className="flex shrink-0 items-center gap-2 text-sm uppercase"
           >
@@ -311,7 +311,7 @@ export default function ProjectDetail({
               repeatIntervalMs={8000}
             />
             <a
-              href="mailto:hello@misa.studio"
+              href="mailto:maria@studiomisa.com"
               aria-label="Let's talk"
               className="group flex shrink-0 items-center gap-2 text-base uppercase"
             >
