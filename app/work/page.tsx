@@ -111,7 +111,10 @@ export default function WorksPage() {
             >
               {hovered !== null &&
                 (() => {
-                  const thumbSrc = projects[hovered].mobileCover ?? projects[hovered].cover;
+                  const thumbSrc =
+                    projects[hovered].gridCover ??
+                    projects[hovered].mobileCover ??
+                    projects[hovered].cover;
                   return thumbSrc ? (
                     <div key={hovered} className="grow-from-zero relative h-full w-full overflow-hidden">
                       <ImageWithSkeleton src={thumbSrc} alt="" className="object-cover" />
