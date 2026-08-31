@@ -96,12 +96,15 @@ export default function ContactForm() {
       className="flex w-full flex-col items-start gap-6"
     >
       {/* Honeypot: hidden from sighted and screen-reader users alike, but
-          still a normal input a bot's form-filler will happily fill in. */}
+          still a normal input a bot's form-filler will happily fill in.
+          Name/id deliberately avoid recognized autofill tokens (e.g. "company")
+          — browsers ignore autoComplete="off" for those and will silently
+          fill them from a saved address profile, tripping this for real users. */}
       <div className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden">
-        <label htmlFor="contact-company">Leave this field blank</label>
+        <label htmlFor="contact-hp-field">Leave this field blank</label>
         <input
-          id="contact-company"
-          name="company"
+          id="contact-hp-field"
+          name="contact-hp-field"
           type="text"
           tabIndex={-1}
           autoComplete="off"
