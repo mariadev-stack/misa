@@ -21,9 +21,10 @@ const TIMELINE_OPTIONS = [
 ];
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const FALLBACK_EMAIL = "hello@misa.studio";
 
 type Errors = Partial<Record<"name" | "email" | "message", string>>;
-type Status = "idle" | "submitting" | "success";
+type Status = "idle" | "submitting" | "success" | "error";
 
 export default function ContactForm() {
   const [name, setName] = useState("");
@@ -32,6 +33,9 @@ export default function ContactForm() {
   const [message, setMessage] = useState("");
   const [budget, setBudget] = useState("");
   const [timeline, setTimeline] = useState("");
+  // Honeypot — left blank by real visitors, invisible on screen. Any bot
+  // that fills every input blindly trips it.
+  const [company, setCompany] = useState("");
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<Status>("idle");
   const messageRef = useRef<HTMLTextAreaElement>(null);
@@ -41,7 +45,7 @@ export default function ContactForm() {
     el.style.height = `${el.scrollHeight}px`;
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
     const nextErrors: Errors = {};
@@ -54,10 +58,26 @@ export default function ContactForm() {
 
     setStatus("submitting");
 
-    // TODO: connect to form submission endpoint
-    window.setTimeout(() => {
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          projectType,
+          budget,
+          timeline,
+          message: message.trim(),
+          company,
+        }),
+      });
+
+      if (!res.ok) throw new Error("submission failed");
       setStatus("success");
-    }, 900);
+    } catch {
+      setStatus("error");
+    }
   }
 
   if (status === "success") {
@@ -75,6 +95,21 @@ export default function ContactForm() {
       noValidate
       className="flex w-full flex-col items-start gap-6"
     >
+      {/* Honeypot: hidden from sighted and screen-reader users alike, but
+          still a normal input a bot's form-filler will happily fill in. */}
+      <div className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden">
+        <label htmlFor="contact-company">Leave this field blank</label>
+        <input
+          id="contact-company"
+          name="company"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          value={company}
+          onChange={(e) => setCompany(e.target.value)}
+        />
+      </div>
+
       <div className="flex w-full flex-col items-start gap-1">
         <label htmlFor="contact-name" className="w-full text-[14px] text-white opacity-50">
           Who am I talking to?
@@ -169,6 +204,12 @@ export default function ContactForm() {
         onChange={setTimeline}
         openUpward
       />
+
+      {status === "error" && (
+        <p role="alert" className="text-[12px] text-red-400">
+          Something went wrong — try again or email me directly at {FALLBACK_EMAIL}.
+        </p>
+      )}
 
       <button
         type="submit"
