@@ -112,6 +112,7 @@ export default function WorksPage() {
               {hovered !== null &&
                 (() => {
                   const thumbSrc =
+                    projects[hovered].listCover ??
                     projects[hovered].gridCover ??
                     projects[hovered].mobileCover ??
                     projects[hovered].cover;

@@ -2,6 +2,20 @@ import ProjectDetail from "../../components/ProjectDetail";
 
 const meta = "Yachtcat / Website Design / 2026";
 const externalUrl = "https://yachtcat-production.up.railway.app/en";
+const coverImage = "/images/work/yachtcat/cover-projectdetail-yachtcat.jpg";
+// image-1, image-5, and image-6 are Vimeo clips instead of stills.
+// aspectRatio comes straight from each clip's native resolution (via Vimeo's
+// oEmbed response) so the natural gallery below sizes their slot to fit
+// them exactly, with zero crop.
+const images = [
+  { vimeoId: "1222900195", aspectRatio: "266 / 240" }, // image-1
+  "/images/work/yachtcat/image-2-yachtcat.jpg",
+  "/images/work/yachtcat/image-3-yachtcat.jpg",
+  "/images/work/yachtcat/image-4-yachtcat.jpg",
+  { vimeoId: "1222900261", aspectRatio: "426 / 190", wide: true }, // image-5
+  { vimeoId: "1222900294", aspectRatio: "266 / 240" }, // image-6
+  "/images/work/yachtcat/image-7-yachtcat.jpg",
+];
 
 const sections = [
   {
@@ -29,6 +43,9 @@ export default function YachtcatProject() {
       sections={sections}
       scrollerId="yachtcat-right-panel"
       externalUrl={externalUrl}
+      coverImage={coverImage}
+      images={images}
+      naturalGallery
     />
   );
 }

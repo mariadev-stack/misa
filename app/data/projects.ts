@@ -11,6 +11,9 @@ export type Project = {
   // When set, used for the Work grid view thumbnail at every breakpoint
   // (mobile and desktop alike), overriding cover/mobileGridCover there.
   gridCover?: string;
+  // Overrides gridCover/mobileCover/cover for the Work list view's
+  // hover-preview thumbnail specifically, without touching the grid view.
+  listCover?: string;
 };
 
 export const projects: Project[] = [
@@ -29,7 +32,7 @@ export const projects: Project[] = [
     href: "/work/connect-iot",
     cover: "/images/work/connect-iot/cover-connect.jpg",
     mobileCover: "/images/work/connect-iot/mobile-cover-connect.jpg",
-    gridCover: "/images/work/connect-iot/mobile-cover-connect.jpg",
+    gridCover: "/images/work/connect-iot/list-grid-view-connect.jpg",
   },
   {
     title: "Be!",
@@ -39,6 +42,7 @@ export const projects: Project[] = [
     cover: "/images/work/be/cover-be.jpg",
     mobileCover: "/images/work/be/mobile-cover-be.jpg",
     mobileGridCover: "/images/work/be/mobile-grid-be.jpg",
+    listCover: "/images/work/be/list-view-be.jpg",
   },
   {
     title: "TARQ",
@@ -73,5 +77,12 @@ export const projects: Project[] = [
     cover: "/images/work/hidroituango/cover-hidro.jpg",
     mobileCover: "/images/work/hidroituango/mobile-cover-hidro.jpg",
   },
-  { title: "Yachtcat", year: "2026", tags: ["Website Design"], href: "/work/yachtcat" },
+  {
+    title: "Yachtcat",
+    year: "2026",
+    tags: ["Website Design"],
+    href: "/work/yachtcat",
+    cover: "/images/work/yachtcat/cover-yachtcat.jpg",
+    mobileCover: "/images/work/yachtcat/mobile-cover-yachtcat.jpg",
+  },
 ];
