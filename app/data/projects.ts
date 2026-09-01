@@ -29,6 +29,7 @@ export const projects: Project[] = [
     href: "/work/connect-iot",
     cover: "/images/work/connect-iot/cover-connect.jpg",
     mobileCover: "/images/work/connect-iot/mobile-cover-connect.jpg",
+    gridCover: "/images/work/connect-iot/mobile-cover-connect.jpg",
   },
   {
     title: "Be!",
