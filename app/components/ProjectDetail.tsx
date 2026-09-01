@@ -270,7 +270,7 @@ export default function ProjectDetail({
           )}
         </div>
 
-        <div className="flex items-end justify-center gap-2.5 bg-linear-to-b from-transparent to-[#080808] px-2.5 pt-10 pb-6">
+        <div className="flex items-end justify-center gap-2.5 bg-linear-to-b from-transparent to-[#080808] px-2.5 pt-10 pb-12">
           <Shuffle
             text="Need something like this?"
             tag="p"

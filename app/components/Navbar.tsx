@@ -33,7 +33,7 @@ export default function Navbar({
           room to keep them inline. Hover-swap letters/icons are skipped
           here since touch has no hover to trigger them; the Shuffle
           entrance animation is kept since that's not hover-driven. */}
-      <div className="flex flex-col gap-4 px-4 pt-4 md:hidden">
+      <div className="flex flex-col gap-4 px-4 pt-4 pb-4 md:hidden">
         <div className="flex items-start justify-between">
           <Link href="/" aria-label="MISA. home">
             <Shuffle
