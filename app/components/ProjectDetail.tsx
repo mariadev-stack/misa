@@ -16,6 +16,16 @@ type Section = {
 
 type GalleryRow = { type: "pair" | "uneven" | "full"; indices: number[] };
 
+// A gallery slot is either an image path or a Vimeo-hosted clip. Video
+// items render as a muted, looping, chrome-free embed (Vimeo's
+// "background" player mode) so they sit in the grid like a still image
+// that happens to move, matching every other slot's object-cover framing.
+type MediaItem = string | { vimeoId: string };
+
+function isVimeoItem(item: MediaItem): item is { vimeoId: string } {
+  return typeof item === "object" && item !== null && "vimeoId" in item;
+}
+
 // Splits `count` images into rows following a repeating
 // [pair, uneven-pair, full-width] cycle — the rhythm every project gallery
 // has used so far. A leftover of exactly one image (can't fill a pair or
@@ -45,7 +55,7 @@ type ProjectDetailProps = {
   scrollerId: string;
   externalUrl?: string;
   coverImage?: string;
-  images?: string[];
+  images?: MediaItem[];
 };
 
 export default function ProjectDetail({
@@ -61,13 +71,26 @@ export default function ProjectDetail({
   // Renders one gallery box: the real image at `images[index]` when it
   // exists, falling back to the white placeholder otherwise.
   function GallerySlot({ index, className }: { index: number; className: string }) {
-    const src = images?.[index];
-    return src ? (
+    const item = images?.[index];
+    if (!item) {
+      return <div className={`${className} bg-white`} />;
+    }
+    if (isVimeoItem(item)) {
+      return (
+        <div className={`relative overflow-hidden ${className}`}>
+          <iframe
+            src={`https://player.vimeo.com/video/${item.vimeoId}?background=1&autoplay=1&loop=1&muted=1`}
+            className="absolute inset-0 h-full w-full"
+            allow="autoplay; fullscreen"
+            title=""
+          />
+        </div>
+      );
+    }
+    return (
       <div className={`relative ${className}`}>
-        <ImageWithSkeleton src={src} alt="" className="object-cover" />
+        <ImageWithSkeleton src={item} alt="" className="object-cover" />
       </div>
-    ) : (
-      <div className={`${className} bg-white`} />
     );
   }
 

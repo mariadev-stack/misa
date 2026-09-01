@@ -2,6 +2,17 @@ import ProjectDetail from "../../components/ProjectDetail";
 
 const meta = "TARQ / Website Design / 2026";
 const externalUrl = "https://www.tarqstudio.com/en";
+const coverImage = "/images/work/tarq/cover-projectdetail-tarq.png";
+// image-1, image-4, image-5, and image-7 are Vimeo clips instead of stills.
+const images = [
+  { vimeoId: "1222879170" }, // image-1
+  "/images/work/tarq/image-2-tarq.png",
+  "/images/work/tarq/image-3-tarq.png",
+  { vimeoId: "1222879698" }, // image-4
+  { vimeoId: "1222881127" }, // image-5
+  "/images/work/tarq/image-6-tarq.png",
+  { vimeoId: "1222881211" }, // image-7
+];
 
 const sections = [
   {
@@ -29,6 +40,8 @@ export default function TarqProject() {
       sections={sections}
       scrollerId="tarq-right-panel"
       externalUrl={externalUrl}
+      coverImage={coverImage}
+      images={images}
     />
   );
 }

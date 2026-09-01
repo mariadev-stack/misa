@@ -39,7 +39,14 @@ export const projects: Project[] = [
     mobileCover: "/images/work/be/mobile-cover-be.jpg",
     mobileGridCover: "/images/work/be/mobile-grid-be.jpg",
   },
-  { title: "TARQ", year: "2026", tags: ["Website Design"], href: "/work/tarq" },
+  {
+    title: "TARQ",
+    year: "2026",
+    tags: ["Website Design"],
+    href: "/work/tarq",
+    cover: "/images/work/tarq/cover-tarq.png",
+    mobileCover: "/images/work/tarq/mobile-cover-tarq.png",
+  },
   {
     title: "The Somos",
     year: "2023",
