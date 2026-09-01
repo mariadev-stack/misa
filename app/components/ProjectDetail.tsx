@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import Image from "next/image";
 import ImageWithSkeleton from "./ImageWithSkeleton";
 import Navbar, { HOVER_STAGGER_MS } from "./Navbar";
@@ -20,7 +20,10 @@ type GalleryRow = { type: "pair" | "uneven" | "full"; indices: number[] };
 // items render as a muted, looping, chrome-free embed (Vimeo's
 // "background" player mode) so they sit in the grid like a still image
 // that happens to move, matching every other slot's object-cover framing.
-type MediaItem = string | { vimeoId: string };
+// `aspectRatio`/`wide` only apply under `naturalGallery` (see below) —
+// they size the slot to the clip's real dimensions instead of cropping it
+// into a fixed-height row.
+type MediaItem = string | { vimeoId: string; aspectRatio?: string; wide?: boolean };
 
 function isVimeoItem(item: MediaItem): item is { vimeoId: string } {
   return typeof item === "object" && item !== null && "vimeoId" in item;
@@ -56,6 +59,11 @@ type ProjectDetailProps = {
   externalUrl?: string;
   coverImage?: string;
   images?: MediaItem[];
+  // Opts this project's gallery out of the shared fixed-height
+  // pair/uneven/full row rhythm, sizing every slot to its item's own
+  // aspect ratio instead (via CSS `aspect-ratio`) so a mixed image/video
+  // gallery never crops a clip to fit a row shape it wasn't shot for.
+  naturalGallery?: boolean;
 };
 
 export default function ProjectDetail({
@@ -65,19 +73,29 @@ export default function ProjectDetail({
   externalUrl,
   coverImage,
   images,
+  naturalGallery,
 }: ProjectDetailProps) {
   const [openIndex, setOpenIndex] = useState(0);
 
   // Renders one gallery box: the real image at `images[index]` when it
-  // exists, falling back to the white placeholder otherwise.
-  function GallerySlot({ index, className }: { index: number; className: string }) {
+  // exists, falling back to the white placeholder otherwise. `style` is
+  // only used by the natural-gallery grid, to set the slot's aspect ratio.
+  function GallerySlot({
+    index,
+    className,
+    style,
+  }: {
+    index: number;
+    className: string;
+    style?: CSSProperties;
+  }) {
     const item = images?.[index];
     if (!item) {
-      return <div className={`${className} bg-white`} />;
+      return <div className={`${className} bg-white`} style={style} />;
     }
     if (isVimeoItem(item)) {
       return (
-        <div className={`relative overflow-hidden ${className}`}>
+        <div className={`relative overflow-hidden ${className}`} style={style}>
           <iframe
             src={`https://player.vimeo.com/video/${item.vimeoId}?background=1&autoplay=1&loop=1&muted=1`}
             className="absolute inset-0 h-full w-full"
@@ -88,8 +106,32 @@ export default function ProjectDetail({
       );
     }
     return (
-      <div className={`relative ${className}`}>
+      <div className={`relative ${className}`} style={style}>
         <ImageWithSkeleton src={item} alt="" className="object-cover" />
+      </div>
+    );
+  }
+
+  // Natural gallery: two square-ish columns, each slot sized to its own
+  // item's aspect ratio (defaulting to 1:1 for stills, which is how this
+  // project's non-video images were shot) instead of a shared fixed
+  // height. A video flagged `wide` spans both columns at its real ratio.
+  function NaturalGalleryGrid() {
+    return (
+      <div className="grid grid-cols-2 gap-2">
+        {(images ?? []).map((item, i) => {
+          const isVideo = isVimeoItem(item);
+          const aspectRatio = isVideo ? (item.aspectRatio ?? "1 / 1") : "1 / 1";
+          const wide = isVideo && item.wide;
+          return (
+            <GallerySlot
+              key={i}
+              index={i}
+              className={wide ? "col-span-2 w-full" : "w-full"}
+              style={{ aspectRatio }}
+            />
+          );
+        })}
       </div>
     );
   }
@@ -221,7 +263,11 @@ export default function ProjectDetail({
         </div>
 
         <div className="flex flex-col gap-2 border-t border-white/15 p-4">
-          <GalleryGrid heightClass="h-51.25" narrowWidthClass="w-2/5" shrink0={false} />
+          {naturalGallery ? (
+            <NaturalGalleryGrid />
+          ) : (
+            <GalleryGrid heightClass="h-51.25" narrowWidthClass="w-2/5" shrink0={false} />
+          )}
         </div>
 
         <div className="flex items-end justify-center gap-2.5 bg-linear-to-b from-transparent to-[#080808] px-2.5 pt-10 pb-6">
@@ -278,7 +324,11 @@ export default function ProjectDetail({
           ) : (
             <div className="h-110.5 w-full shrink-0 bg-white" />
           )}
-          <GalleryGrid heightClass="h-110.5" narrowWidthClass="w-94.5" shrink0={true} />
+          {naturalGallery ? (
+            <NaturalGalleryGrid />
+          ) : (
+            <GalleryGrid heightClass="h-110.5" narrowWidthClass="w-94.5" shrink0={true} />
+          )}
         </div>
 
         <div className="relative flex w-123.5 shrink-0 flex-col border-b border-white/15">

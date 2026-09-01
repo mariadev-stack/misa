@@ -4,14 +4,17 @@ const meta = "TARQ / Website Design / 2026";
 const externalUrl = "https://www.tarqstudio.com/en";
 const coverImage = "/images/work/tarq/cover-projectdetail-tarq.png";
 // image-1, image-4, image-5, and image-7 are Vimeo clips instead of stills.
+// aspectRatio comes straight from each clip's native resolution (via Vimeo's
+// oEmbed response) so the natural gallery below sizes their slot to fit
+// them exactly, with zero crop.
 const images = [
-  { vimeoId: "1222879170" }, // image-1
+  { vimeoId: "1222879170", aspectRatio: "240 / 240" }, // image-1
   "/images/work/tarq/image-2-tarq.png",
   "/images/work/tarq/image-3-tarq.png",
-  { vimeoId: "1222879698" }, // image-4
-  { vimeoId: "1222881127" }, // image-5
+  { vimeoId: "1222879698", aspectRatio: "240 / 240" }, // image-4
+  { vimeoId: "1222881127", aspectRatio: "426 / 240", wide: true }, // image-5
   "/images/work/tarq/image-6-tarq.png",
-  { vimeoId: "1222881211" }, // image-7
+  { vimeoId: "1222881211", aspectRatio: "240 / 240" }, // image-7
 ];
 
 const sections = [
@@ -42,6 +45,7 @@ export default function TarqProject() {
       externalUrl={externalUrl}
       coverImage={coverImage}
       images={images}
+      naturalGallery
     />
   );
 }
