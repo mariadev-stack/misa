@@ -3,9 +3,9 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import ImageWithSkeleton from "./ImageWithSkeleton";
-import { projects } from "../data/projects";
+import { homeProjects } from "../data/projects";
 
-const track = [...projects, ...projects, ...projects];
+const track = [...homeProjects, ...homeProjects, ...homeProjects];
 
 // How long the carousel waits with no user interaction before it
 // auto-advances to the next card.
@@ -84,7 +84,7 @@ export default function ProjectsCarousel() {
       raf = requestAnimationFrame(() => {
         const setWidth = el!.scrollWidth / 3;
         const target = setWidth;
-        const start = target + setWidth / (projects.length / 2);
+        const start = target + setWidth / (homeProjects.length / 2);
         const duration = 900;
         const introStart = performance.now();
 

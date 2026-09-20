@@ -85,4 +85,19 @@ export const projects: Project[] = [
     cover: "/images/work/yachtcat/cover-yachtcat.jpg",
     mobileCover: "/images/work/yachtcat/mobile-cover-yachtcat.jpg",
   },
+  {
+    title: "DiBruno",
+    year: "2026",
+    tags: ["Website Design"],
+    href: "/work/dibruno",
+    cover: "/images/work/dibruno/cover-dibruno.jpg",
+    mobileCover: "/images/work/dibruno/mobile-cover-dibruno.jpg",
+  },
 ];
+
+// Curated subset (and order) shown in the homepage carousel — the Work
+// page still lists every project via `projects` above.
+const homeProjectTitles = ["SUNO", "Connect IoT", "TARQ", "Yachtcat", "DiBruno"];
+export const homeProjects: Project[] = homeProjectTitles.map(
+  (title) => projects.find((project) => project.title === title)!
+);
