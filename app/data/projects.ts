@@ -61,7 +61,7 @@ export const projects: Project[] = [
   {
     title: "UMA",
     year: "2026",
-    tags: ["Product Design"],
+    tags: ["Experience Design"],
     href: "/work/uma",
     cover: "/images/work/uma/cover-uma.jpg",
     mobileCover: "/images/work/uma/mobile-cover-uma.jpg",

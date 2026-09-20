@@ -1,6 +1,6 @@
 import ProjectDetail from "../../components/ProjectDetail";
 
-const meta = "UMA / Product Design / 2026";
+const meta = "UMA / Experience Design / 2026";
 const coverImage = "/images/work/uma/cover-projectdetail-uma.jpg";
 const images = [
   "/images/work/uma/image-1-uma.jpg",
