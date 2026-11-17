@@ -3,6 +3,7 @@ import Link from "next/link";
 import Shuffle from "./Shuffle";
 import HoverLetters from "./HoverLetters";
 import HoverIcon from "./HoverIcon";
+import EmailCopyLink, { EMAIL } from "./EmailCopyLink";
 
 export const HOVER_STAGGER_MS = 25;
 
@@ -10,8 +11,23 @@ const navLinks = ["Web Design", "Design Consultancy", "Art Direction"];
 
 const menuLinks = [
   { label: "Work", href: "/work" },
-  { label: "Contact", href: "/contact" },
+  // Contact page is hidden for now (route moved to app/_contact).
+  // { label: "Contact", href: "/contact" },
 ];
+
+// Desktop email link: an invisible "Email me" reserves the layout width, and
+// the decipher button is pinned to its right edge so the longer email grows
+// leftward on hover without shifting the rest of the header.
+function DesktopEmail() {
+  return (
+    <span className="relative inline-block text-base leading-6">
+      <span className="invisible" aria-hidden="true">
+        Email me
+      </span>
+      <EmailCopyLink className="absolute top-0 right-0 text-base leading-6" />
+    </span>
+  );
+}
 
 type NavbarProps = {
   variant?: "home" | "simple";
@@ -25,7 +41,7 @@ export default function Navbar({
   return (
     <header className="relative z-10">
       {/* Mobile: both variants share this layout — MISA plus a stacked
-          Work/Contact/Email me column — since the "Back to Work" bar
+          Work link + email — since the "Back to Work" bar
           the desktop "simple" variant relies on doesn't exist on mobile;
           the header's own Work link takes over that job. Nav categories
           only show for the home variant (and only when explicitly asked
@@ -45,13 +61,13 @@ export default function Navbar({
             />
           </Link>
 
-          <div className="flex w-30 flex-col gap-1 text-sm">
+          <div className="flex min-w-30 flex-col items-end gap-1 text-sm">
             {menuLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
                 aria-label={link.label}
-                className="flex items-center justify-between gap-2.5"
+                className="flex w-30 items-center justify-between gap-2.5"
               >
                 <span>{link.label}</span>
                 <Image
@@ -63,20 +79,9 @@ export default function Navbar({
                 />
               </a>
             ))}
-            <a
-              href="mailto:maria@studiomisa.com"
-              aria-label="Email me"
-              className="flex items-center justify-between gap-2.5"
-            >
-              <span>Email me</span>
-              <Image
-                src="/images/arrow.svg"
-                alt=""
-                width={16}
-                height={16}
-                className="-scale-x-100"
-              />
-            </a>
+            {/* No hover on touch, so the email is shown outright; tapping
+                copies it and deciphers into "Copied". */}
+            <EmailCopyLink idleText={EMAIL} hoverText={EMAIL} className="text-left" />
           </div>
         </div>
 
@@ -122,13 +127,7 @@ export default function Navbar({
             ))}
           </nav>
 
-          <a
-            href="mailto:maria@studiomisa.com"
-            className="group cursor-pointer text-base"
-            aria-label="Email me"
-          >
-            <HoverLetters text="Email me" />
-          </a>
+          <DesktopEmail />
 
           <div className="absolute top-24.5 left-22.5 flex w-43.25 flex-col gap-1">
             {menuLinks.map((link) => (
@@ -164,13 +163,7 @@ export default function Navbar({
             />
           </Link>
 
-          <a
-            href="mailto:maria@studiomisa.com"
-            className="group cursor-pointer text-base"
-            aria-label="Email me"
-          >
-            <HoverLetters text="Email me" />
-          </a>
+          <DesktopEmail />
         </div>
       )}
     </header>
