@@ -29,6 +29,10 @@ type ShuffleProps = {
   repeatIntervalMs?: number;
   /** Fired every time a shuffle animation starts (initial play, hover replay, and each repeat), so a sibling element can stay in sync. */
   onPlay?: () => void;
+  /** Replays the shuffle whenever this value changes (ignored on first render). Lets a parent drive the animation, e.g. from a hover on a wider element. */
+  playTrigger?: number;
+  /** Set up immediately on mount instead of waiting to scroll into view. Use when the parent drives playback via `playTrigger` (e.g. text inside a nested scroll container, which the default window-based ScrollTrigger never sees). */
+  immediate?: boolean;
 };
 
 export default function Shuffle({
@@ -47,6 +51,8 @@ export default function Shuffle({
   scroller,
   repeatIntervalMs,
   onPlay,
+  playTrigger,
+  immediate = false,
 }: ShuffleProps) {
   const ref = useRef<HTMLElement | null>(null);
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -58,6 +64,7 @@ export default function Shuffle({
   const playingRef = useRef(false);
   const hoverHandlerRef = useRef<(() => void) | null>(null);
   const repeatTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const replayRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     if ("fonts" in document) {
@@ -286,6 +293,11 @@ export default function Shuffle({
         ref.current.addEventListener("mouseenter", handler);
       };
 
+      replayRef.current = () => {
+        build();
+        play();
+      };
+
       const create = () => {
         build();
         play();
@@ -308,16 +320,22 @@ export default function Shuffle({
       const resolvedScroller =
         typeof scroller === "string" ? (document.querySelector(scroller) ?? window) : (scroller ?? window);
 
-      const st = ScrollTrigger.create({
-        trigger: el,
-        scroller: resolvedScroller,
-        start: "top 90%",
-        once: triggerOnce,
-        onEnter: create,
-      });
+      let st: ScrollTrigger | null = null;
+      if (immediate) {
+        create();
+      } else {
+        st = ScrollTrigger.create({
+          trigger: el,
+          scroller: resolvedScroller,
+          start: "top 90%",
+          once: triggerOnce,
+          onEnter: create,
+        });
+      }
 
       return () => {
-        st.kill();
+        replayRef.current = null;
+        st?.kill();
         removeHover();
         teardown();
         setReady(false);
@@ -328,10 +346,17 @@ export default function Shuffle({
       };
     },
     {
-      dependencies: [text, duration, ease, fontsLoaded, shuffleDirection, shuffleTimes, stagger, triggerOnce, triggerOnHover, scroller, repeatIntervalMs, onPlay],
+      dependencies: [text, duration, ease, fontsLoaded, shuffleDirection, shuffleTimes, stagger, triggerOnce, triggerOnHover, scroller, repeatIntervalMs, onPlay, immediate],
       scope: ref as React.RefObject<HTMLElement>,
     }
   );
+
+  const lastTriggerRef = useRef(playTrigger);
+  useEffect(() => {
+    if (playTrigger === lastTriggerRef.current) return;
+    lastTriggerRef.current = playTrigger;
+    replayRef.current?.();
+  }, [playTrigger]);
 
   const commonStyle = useMemo(() => ({ textAlign, ...style }), [textAlign, style]);
   const classes = useMemo(

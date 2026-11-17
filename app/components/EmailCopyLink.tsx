@@ -1,24 +1,40 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import Shuffle from "./Shuffle";
 
 export const EMAIL = "studiomisa.inquiries@gmail.com";
 
-const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@._-/#*";
 const COPIED_RESET_MS = 1600;
+// Inline so it beats .shuffle-parent's `white-space: normal` + break-word,
+// which would otherwise wrap text inside its stacked box.
+const NOWRAP = { whiteSpace: "nowrap" } as const;
+
+type Label = "none" | "hover" | "copied";
 
 type EmailCopyLinkProps = {
-  /** Text shown at rest. On desktop this is "Email me"; on mobile pass the email itself. */
-  idleText?: string;
-  /** Text revealed on hover (ignored when it equals idleText). */
-  hoverText?: string;
+  /**
+   * "overlay" (desktop): `text` is always shown; hovering dims it to 15% and
+   * shuffles `hoverLabel` in on top of it, which becomes `copiedLabel` on
+   * click.
+   * "swap" (mobile, no hover): shows `text`; tapping copies the email and
+   * swaps the text for `copiedLabel`.
+   */
+  variant?: "overlay" | "swap";
+  /** Resting text. Defaults to the email (overlay) or "Email me" (swap). */
+  text?: string;
+  hoverLabel?: string;
+  copiedLabel?: string;
+  /** Extra content after the text, e.g. an arrow icon. Dimmed with the text in overlay mode. */
+  after?: ReactNode;
+  /** Where the overlay label sits over the text. */
+  labelAlign?: "left" | "center";
+  /** Overlay only: play the MISA load-in shuffle on the resting text. */
+  introShuffle?: boolean;
+  /** Extra classes for the hover/copied labels, e.g. a smaller text size. */
+  labelClassName?: string;
   className?: string;
-  /** Duration of one decipher pass, in ms. */
-  durationMs?: number;
 };
-
-const randomChar = () =>
-  SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
 
 async function copyToClipboard(text: string) {
   try {
@@ -41,120 +57,172 @@ async function copyToClipboard(text: string) {
   }
 }
 
-// Text-decipher link: scrambles from its current text into the target text,
-// resolving left to right. Hover reveals the email, click copies it and
-// deciphers into "Copied", then settles back.
-export default function EmailCopyLink({
-  idleText = "Email me",
-  hoverText = EMAIL,
-  className = "",
-  durationMs = 500,
-}: EmailCopyLinkProps) {
-  const [display, setDisplay] = useState(idleText);
-  const displayRef = useRef(idleText);
-  const rafRef = useRef<number | null>(null);
-  const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const hoveringRef = useRef(false);
-  const copiedRef = useRef(false);
-
-  const animateTo = useCallback(
-    (target: string) => {
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-      const from = displayRef.current;
-      if (from === target) return;
-
-      const reduceMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
-      if (reduceMotion) {
-        displayRef.current = target;
-        setDisplay(target);
-        return;
-      }
-
-      const length = Math.max(from.length, target.length);
-      const start = performance.now();
-
-      const tick = (now: number) => {
-        const progress = Math.min((now - start) / durationMs, 1);
-        // How many characters (from the left) have locked into the target.
-        const resolved = Math.floor(progress * length);
-        // Length eases from the old text's length to the new one's.
-        const currentLength = Math.round(
-          from.length + (target.length - from.length) * progress,
-        );
-
-        let next = "";
-        for (let i = 0; i < currentLength; i++) {
-          if (i < resolved) {
-            next += target[i] ?? "";
-          } else {
-            const t = target[i];
-            next += t === " " ? " " : randomChar();
-          }
-        }
-
-        if (progress >= 1) next = target;
-        displayRef.current = next;
-        setDisplay(next);
-
-        if (progress < 1) {
-          rafRef.current = requestAnimationFrame(tick);
-        } else {
-          rafRef.current = null;
-        }
-      };
-
-      rafRef.current = requestAnimationFrame(tick);
-    },
-    [durationMs],
+// Stacked texts that crossfade by opacity (nothing slides) while the
+// incoming one replays the same shuffle as the MISA logo.
+function FadeShuffleStack({
+  items,
+  active,
+  triggers,
+  align,
+}: {
+  items: { key: string; text: string; className?: string }[];
+  active: string;
+  triggers: Record<string, number>;
+  align: "left" | "center";
+}) {
+  return (
+    <>
+      {items.map(({ key, text, className = "" }) => (
+        <span
+          key={key}
+          aria-hidden="true"
+          className={`absolute inset-0 flex items-center whitespace-nowrap transition-opacity duration-300 ease-out ${
+            align === "center" ? "justify-center" : "justify-start"
+          } ${key === active ? "opacity-100" : "opacity-0"} ${className}`}
+        >
+          <Shuffle
+            text={text}
+            tag="span"
+            style={NOWRAP}
+            shuffleDirection="right"
+            duration={0.35}
+            triggerOnHover={false}
+            playTrigger={triggers[key] ?? 0}
+            immediate
+          />
+        </span>
+      ))}
+    </>
   );
+}
+
+export default function EmailCopyLink({
+  variant = "overlay",
+  text = variant === "overlay" ? EMAIL : "Email me",
+  hoverLabel = "Click to copy",
+  copiedLabel = "Copied",
+  after,
+  labelAlign = "center",
+  labelClassName = "",
+  introShuffle = false,
+  className = "",
+}: EmailCopyLinkProps) {
+  const [hovering, setHovering] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [triggers, setTriggers] = useState<Record<string, number>>({});
+  const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const label: Label = copied
+    ? "copied"
+    : hovering && variant === "overlay"
+      ? "hover"
+      : "none";
+
+  // Replay the shuffle on whichever text just became visible.
+  const prevLabelRef = useRef<Label>(label);
+  useEffect(() => {
+    if (prevLabelRef.current === label) return;
+    prevLabelRef.current = label;
+    setTriggers((t) => ({ ...t, [label]: (t[label] ?? 0) + 1 }));
+  }, [label]);
 
   useEffect(
     () => () => {
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
       if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
     },
     [],
   );
 
-  const restingText = () => (hoveringRef.current ? hoverText : idleText);
-
-  const handleEnter = () => {
-    hoveringRef.current = true;
-    if (!copiedRef.current) animateTo(hoverText);
-  };
-
-  const handleLeave = () => {
-    hoveringRef.current = false;
-    if (!copiedRef.current) animateTo(idleText);
-  };
-
   const handleClick = async () => {
     await copyToClipboard(EMAIL);
-    copiedRef.current = true;
-    animateTo("Copied");
+    setCopied(true);
     if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
-    resetTimerRef.current = setTimeout(() => {
-      copiedRef.current = false;
-      animateTo(restingText());
-    }, COPIED_RESET_MS);
+    resetTimerRef.current = setTimeout(() => setCopied(false), COPIED_RESET_MS);
   };
+
+  const hoverProps =
+    variant === "overlay"
+      ? {
+          onPointerEnter: (e: React.PointerEvent) =>
+            e.pointerType === "mouse" && setHovering(true),
+          onPointerLeave: (e: React.PointerEvent) =>
+            e.pointerType === "mouse" && setHovering(false),
+          onFocus: () => setHovering(true),
+          onBlur: () => setHovering(false),
+        }
+      : {};
 
   return (
     <button
       type="button"
       onClick={handleClick}
-      onPointerEnter={(e) => e.pointerType === "mouse" && handleEnter()}
-      onPointerLeave={(e) => e.pointerType === "mouse" && handleLeave()}
-      onFocus={handleEnter}
-      onBlur={handleLeave}
+      {...hoverProps}
       aria-label={`Copy email address ${EMAIL}`}
-      className={`cursor-pointer whitespace-pre ${className}`}
+      className={`relative cursor-pointer whitespace-nowrap ${
+        after ? "inline-flex items-center gap-2" : "inline-block leading-6"
+      } ${className}`}
     >
-      <span aria-hidden="true">{display}</span>
+      {variant === "overlay" ? (
+        <>
+          <span
+            aria-hidden="true"
+            className={`flex items-center gap-2 transition-opacity duration-300 ease-out ${
+              label === "none" ? "opacity-100" : "opacity-15"
+            }`}
+          >
+            {introShuffle ? (
+              // Same load-in shuffle as the MISA logo.
+              <Shuffle
+                text={text}
+                tag="span"
+                style={NOWRAP}
+                shuffleDirection="right"
+                duration={0.35}
+                triggerOnHover={false}
+              />
+            ) : (
+              <span>{text}</span>
+            )}
+            {after}
+          </span>
+          <span className="pointer-events-none absolute inset-0">
+            <FadeShuffleStack
+              items={[
+                { key: "hover", text: hoverLabel, className: labelClassName },
+                { key: "copied", text: copiedLabel, className: labelClassName },
+              ]}
+              active={label}
+              triggers={triggers}
+              align={labelAlign}
+            />
+          </span>
+        </>
+      ) : (
+        <>
+          <span className="relative inline-block">
+            {/* Reserves the width of whichever text is wider, at its own size. */}
+            <span className="invisible grid" aria-hidden="true">
+              <span className="col-start-1 row-start-1">{text}</span>
+              <span className={`col-start-1 row-start-1 ${labelClassName}`}>
+                {copiedLabel}
+              </span>
+            </span>
+            <FadeShuffleStack
+              items={[
+                { key: "none", text },
+                { key: "copied", text: copiedLabel, className: labelClassName },
+              ]}
+              active={label}
+              triggers={triggers}
+              align="left"
+            />
+          </span>
+          {after}
+        </>
+      )}
+
       <span className="sr-only" aria-live="polite">
-        {display === "Copied" ? "Email copied to clipboard" : ""}
+        {copied ? "Email copied to clipboard" : ""}
       </span>
     </button>
   );

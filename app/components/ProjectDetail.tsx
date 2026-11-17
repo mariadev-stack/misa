@@ -8,6 +8,7 @@ import Shuffle from "./Shuffle";
 import HoverLetters from "./HoverLetters";
 import HoverIcon from "./HoverIcon";
 import PlusMinusIcon from "./PlusMinusIcon";
+import EmailCopyLink from "./EmailCopyLink";
 
 type Section = {
   label: string;
@@ -281,20 +282,22 @@ export default function ProjectDetail({
             scroller={`#${scrollerId}-mobile`}
             repeatIntervalMs={8000}
           />
-          <a
-            href="mailto:studiomisa.inquiries@gmail.com"
-            aria-label="Let's talk"
-            className="flex shrink-0 items-center gap-2 text-sm uppercase"
-          >
-            <span>LET&apos;S TALK</span>
-            <Image
-              src="/images/arrow.svg"
-              alt=""
-              width={16}
-              height={16}
-              className="-scale-x-100"
-            />
-          </a>
+          <EmailCopyLink
+            variant="swap"
+            text="Let's talk"
+            copiedLabel="Email copied"
+            labelClassName="text-xs"
+            className="shrink-0 text-sm uppercase"
+            after={
+              <Image
+                src="/images/arrow.svg"
+                alt=""
+                width={16}
+                height={16}
+                className="-scale-x-100"
+              />
+            }
+          />
         </div>
       </div>
 
@@ -383,20 +386,26 @@ export default function ProjectDetail({
               scroller={`#${scrollerId}`}
               repeatIntervalMs={8000}
             />
-            <a
-              href="mailto:studiomisa.inquiries@gmail.com"
-              aria-label="Let's talk"
-              className="group flex shrink-0 items-center gap-2 text-base uppercase"
-            >
-              <HoverLetters text="LET'S TALK" staggerMs={HOVER_STAGGER_MS} />
-              <HoverIcon
-                src="/images/arrow.svg"
-                width={24}
-                height={24}
-                className="-scale-x-100"
-                delayMs={"LET'S TALK".length * HOVER_STAGGER_MS}
-              />
-            </a>
+            {/* Label is left-aligned so the longer "Click to copy email"
+                extends right into empty space instead of over the
+                "Need something like this?" text. */}
+            <EmailCopyLink
+              text="Let's talk"
+              hoverLabel="Click to copy email"
+              copiedLabel="Email copied"
+              labelAlign="left"
+              labelClassName="text-sm"
+              className="shrink-0 text-base uppercase"
+              after={
+                <Image
+                  src="/images/arrow.svg"
+                  alt=""
+                  width={24}
+                  height={24}
+                  className="-scale-x-100"
+                />
+              }
+            />
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@ import Link from "next/link";
 import Shuffle from "./Shuffle";
 import HoverLetters from "./HoverLetters";
 import HoverIcon from "./HoverIcon";
-import EmailCopyLink, { EMAIL } from "./EmailCopyLink";
+import EmailCopyLink from "./EmailCopyLink";
 
 export const HOVER_STAGGER_MS = 25;
 
@@ -14,20 +14,6 @@ const menuLinks = [
   // Contact page is hidden for now (route moved to app/_contact).
   // { label: "Contact", href: "/contact" },
 ];
-
-// Desktop email link: an invisible "Email me" reserves the layout width, and
-// the decipher button is pinned to its right edge so the longer email grows
-// leftward on hover without shifting the rest of the header.
-function DesktopEmail() {
-  return (
-    <span className="relative inline-block text-base leading-6">
-      <span className="invisible" aria-hidden="true">
-        Email me
-      </span>
-      <EmailCopyLink className="absolute top-0 right-0 text-base leading-6" />
-    </span>
-  );
-}
 
 type NavbarProps = {
   variant?: "home" | "simple";
@@ -61,7 +47,7 @@ export default function Navbar({
             />
           </Link>
 
-          <div className="flex min-w-30 flex-col items-end gap-1 text-sm">
+          <div className="flex w-30 flex-col gap-1 text-sm">
             {menuLinks.map((link) => (
               <a
                 key={link.label}
@@ -79,9 +65,18 @@ export default function Navbar({
                 />
               </a>
             ))}
-            {/* No hover on touch, so the email is shown outright; tapping
-                copies it and deciphers into "Copied". */}
-            <EmailCopyLink idleText={EMAIL} hoverText={EMAIL} className="text-left" />
+            {/* No hover on touch: "Email me" stays put and tapping copies
+                the email, shuffling into "Copied". */}
+            <div className="flex w-30 items-center justify-between gap-2.5">
+              <EmailCopyLink variant="swap" />
+              <Image
+                src="/images/arrow.svg"
+                alt=""
+                width={16}
+                height={16}
+                className="-scale-x-100"
+              />
+            </div>
           </div>
         </div>
 
@@ -127,7 +122,7 @@ export default function Navbar({
             ))}
           </nav>
 
-          <DesktopEmail />
+          <EmailCopyLink introShuffle className="text-base" />
 
           <div className="absolute top-24.5 left-22.5 flex w-43.25 flex-col gap-1">
             {menuLinks.map((link) => (
@@ -163,7 +158,7 @@ export default function Navbar({
             />
           </Link>
 
-          <DesktopEmail />
+          <EmailCopyLink introShuffle className="text-base" />
         </div>
       )}
     </header>
